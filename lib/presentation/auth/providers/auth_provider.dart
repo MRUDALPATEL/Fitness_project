@@ -6,6 +6,7 @@ import 'package:Fitness/utils/managers/color_manager.dart';
 import 'package:Fitness/utils/managers/string_manager.dart';
 import 'package:Fitness/utils/managers/style_manager.dart';
 import 'package:Fitness/utils/managers/value_manager.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthProvider with ChangeNotifier {
   User? _user;
@@ -159,8 +160,12 @@ class AuthProvider with ChangeNotifier {
         password: password,
       );
 
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
+      final docSnapshot = await FirebaseFirestore.instance.collection('users').doc(_user!.uid).get();
+      if (!docSnapshot.exists) {
+        Navigator.pushReplacementNamed(context, '/addData');
+      } else {
+        Navigator.pushReplacementNamed(context, '/main');
+      }
 
       notifyListeners();
     } on FirebaseAuthException catch (_) {
@@ -200,6 +205,8 @@ class AuthProvider with ChangeNotifier {
           .collection('users')
           .doc(credential.user!.uid)
           .set({});
+
+      Navigator.pushReplacementNamed(context, '/addData');
 
       notifyListeners();
     } on FirebaseAuthException catch (_) {
@@ -289,4 +296,36 @@ class AuthProvider with ChangeNotifier {
   }
 }
 
+  Future<void> signInWithGoogle(BuildContext context) async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        return; // The user canceled the sign-in
+      }
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      _user = userCredential.user;
+
+      if (_user != null) {
+        final docSnapshot = await FirebaseFirestore.instance.collection('users').doc(_user!.uid).get();
+        if (!docSnapshot.exists) {
+          await FirebaseFirestore.instance.collection('users').doc(_user!.uid).set({
+            'name': googleUser.displayName,
+            'email': googleUser.email,
+          });
+          Navigator.pushReplacementNamed(context, '/addUserData');
+        } else {
+          Navigator.pushReplacementNamed(context, '/main');
+        }
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Error in signInWithGoogle: $e");
+      rethrow;
+    }
+  }
 }

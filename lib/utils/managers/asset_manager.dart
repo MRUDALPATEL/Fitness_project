@@ -9,6 +9,7 @@ class ImageManager {
   static const splashBG5WP = '$imagePath/boarding5.webp';
   static const splashBG6WP = '$imagePath/boarding6.webp';
   static const splashBG7WP = '$imagePath/boarding7.webp';
+  static const google = '$imagePath/google.png';
   static const logo = '$imagePath/logo.webp';
   static const fork = '$imagePath/fork.webp';
   static const carousel1WP = '$imagePath/carousel1.webp';

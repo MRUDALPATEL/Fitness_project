@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:Fitness/presentation/auth/providers/auth_provider.dart';
 import 'package:Fitness/presentation/auth/widgets/login_or_register_view.dart';
 import 'package:Fitness/utils/managers/asset_manager.dart';
@@ -25,19 +28,14 @@ class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _repeatPasswordController =
-      TextEditingController();
-
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final TextEditingController _repeatPasswordController = TextEditingController();
   AuthMode _authMode = AuthMode.signIn;
-  // ignore: avoid_init_to_null
-  var dropDownGenderValue = null;
 
   @override
   void dispose() {
     _passwordController.dispose();
     _emailController.dispose();
-    _repeatPasswordController.dispose();
-
     super.dispose();
   }
 
@@ -56,6 +54,14 @@ class _LoginPageState extends State<LoginPage>
       setState(() {
         _authMode = AuthMode.signIn;
       });
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    try {
+      await Provider.of<AuthProvider>(context, listen: false).signInWithGoogle(context);
+    } catch (e) {
+      // Handle error
     }
   }
 
@@ -182,6 +188,13 @@ class _LoginPageState extends State<LoginPage>
                         ),
                       ),
                     ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: PaddingManager.p18),
+                  child: LimeGreenRoundedButtonWidget(
+                    onTap: _signInWithGoogle,
+                    title: StringsManager.signInWithGoogle,
                   ),
                 ),
               ],

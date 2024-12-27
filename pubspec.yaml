@@ -31,6 +31,7 @@ dependencies:
   freezed: ^2.3.2
   freezed_annotation: ^2.2.0
   google_fonts: ^4.0.3
+  google_sign_in: ^6.2.2
   hidden_drawer_menu: ^3.0.1
   liquid_pull_to_refresh: ^3.0.1
   lottie: ^2.2.0
@@ -48,6 +49,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  flutter_launcher_icons: ^0.14.2
+
+flutter_icons:
+  android: true
+  image_path: "assets/images/icon.png"
+  
+
 flutter:
 
   uses-material-design: true
@@ -55,6 +63,7 @@ flutter:
   assets:
     - assets/images/
     - assets/json/
+
   # fonts:
   #   - family: Schyler
   #     fonts:

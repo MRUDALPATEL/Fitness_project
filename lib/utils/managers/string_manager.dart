@@ -14,6 +14,7 @@ class StringsManager {
   static const String forgotPassword = 'Forgot password?';
   static const String repeatPasswordHint = 'Repeat Password';
   static const String swipeToPrc = 'Let\'s Start';
+  static const String signInWithGoogle = 'Sign in with Google';
   static const String myAcc = 'MY ACCOUNT';
   static const String enterEmailToResetPw =
       'Enter your Email\nto reset your Password';

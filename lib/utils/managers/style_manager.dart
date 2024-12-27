@@ -286,4 +286,9 @@ class StyleManager {
     fontSize: FontSize.s18.sp,
     letterSpacing: SizeManager.s1,
   );
+  static const loginPageTitleTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 28.0,
+    fontWeight: FontWeight.bold,
+  );
 }
