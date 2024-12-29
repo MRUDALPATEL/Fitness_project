@@ -16,15 +16,15 @@ class ConsumptionPage extends StatefulWidget {
 }
 
 class _ConsumptionPageState extends State<ConsumptionPage> {
-  Future<void> _handleRefresh() async {
-    setState(() {
-      Provider.of<ConsumptionProvider>(context, listen: false)
-          .fetchAndSetMeals();
-    });
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ConsumptionProvider>(context, listen: false).fetchAndSetMeals();
+  }
 
-    return await Future.delayed(
-      const Duration(seconds: 2),
-    );
+  Future<void> _handleRefresh() async {
+    await Provider.of<ConsumptionProvider>(context, listen: false).fetchAndSetMeals();
+    return Future.delayed(const Duration(seconds: 2));
   }
 
   @override
@@ -32,67 +32,104 @@ class _ConsumptionPageState extends State<ConsumptionPage> {
     return Consumer<ConsumptionProvider>(
       builder: (context, consumptionProvider, _) => SafeArea(
         child: LiquidPullToRefresh(
-          height: SizeManager.s250.h,
+          height: 80.h, // Adjusted height
           color: ColorManager.darkGrey,
           animSpeedFactor: 2,
           backgroundColor: ColorManager.white2,
           onRefresh: _handleRefresh,
-          child: FutureBuilder<void>(
-            future: consumptionProvider.fetchAndSetMeals(),
-            builder: (context, snapshot) {
-              return Stack(
+          child: Stack(
+            children: [
+              Column(
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: consumptionProvider.meals.length,
-                          itemBuilder: (context, index) {
-                            final meal = consumptionProvider.meals[index];
-                            return MealWidget(
-                              id: meal.id,
-                              title: meal.title,
-                              amount: meal.amount,
-                              calories: meal.calories,
-                              fats: meal.fats,
-                              carbs: meal.carbs,
-                              proteins: meal.proteins,
-                              onPressed: (_) {
-                                setState(
-                                  () {
-                                    consumptionProvider.deleteMeal(
-                                      meal.id,
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
+                  // Goal Progress Section
+                  Padding(
+                    padding: const EdgeInsets.all(PaddingManager.p16),
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(SizeManager.s12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(PaddingManager.p16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Goal Progress",
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w600,
+                                color: ColorManager.darkGrey,
+                              ),
+                            ),
+                            const SizedBox(height: SizeManager.s12),
+                            LinearProgressIndicator(
+                              value: consumptionProvider.kCalaDay /
+                                  (consumptionProvider.goalValue > 0
+                                      ? consumptionProvider.goalValue
+                                      : 2000),
+                              backgroundColor: ColorManager.grey,
+                              color: ColorManager.limeGreen,
+                              minHeight: 8.h,
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(PaddingManager.p12),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: FloatingActionButton(
+                  // Meals List Section
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: consumptionProvider.meals.length,
+                      itemBuilder: (context, index) {
+                        final meal = consumptionProvider.meals[index];
+                        return MealWidget(
+                          id: meal.id,
+                          title: meal.title,
+                          amount: meal.amount,
+                          calories: meal.calories,
+                          fats: meal.fats,
+                          carbs: meal.carbs,
+                          proteins: meal.proteins,
+                          onPressed: (_) => consumptionProvider.deleteMeal(meal.id),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              // Floating Action Buttons
+              Padding(
+                padding: const EdgeInsets.all(PaddingManager.p12),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FloatingActionButton(
                         backgroundColor: ColorManager.limerGreen2,
                         child: const Icon(
                           Icons.water_drop_outlined,
                           color: ColorManager.darkGrey,
                           size: SizeManager.s28,
                         ),
-                        onPressed: () => Navigator.of(context)
-                            .pushNamed(Routes.addWaterRoute),
+                        onPressed: () => Navigator.of(context).pushNamed(Routes.addWaterRoute),
                       ),
-                    ),
-                  )
-                ],
-              );
-            },
+                      const SizedBox(height: 10),
+                      FloatingActionButton(
+                        backgroundColor: ColorManager.limerGreen2,
+                        child: const Icon(
+                          Icons.flag,
+                          color: ColorManager.darkGrey,
+                          size: SizeManager.s28,
+                        ),
+                        onPressed: () => Navigator.of(context).pushNamed(Routes.setGoalRoute),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

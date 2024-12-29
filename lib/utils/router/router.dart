@@ -5,6 +5,7 @@ import 'package:Fitness/presentation/auth/pages/forgot_password_page.dart';
 import 'package:Fitness/presentation/boarding/pages/boarding_page.dart';
 import 'package:Fitness/presentation/consumption/pages/drink_page.dart';
 import 'package:Fitness/presentation/consumption/pages/new_meal_page.dart';
+import 'package:Fitness/presentation/consumption/pages/set_goal_page.dart';
 import 'package:Fitness/presentation/main/pages/main_page.dart';
 import 'package:Fitness/presentation/auth/pages/login_or_register_page.dart';
 import 'package:Fitness/presentation/notifications/pages/notifications_page.dart';
@@ -32,6 +33,7 @@ class Routes {
   static const String addNewExerciseRoute = '/addExercise';
   static const String changeWeightRoute = '/changeWeight';
   static const String changeMeasurementsRoute = '/changeMeasurements';
+  static const String setGoalRoute = '/setGoal';
 }
 
 class RouteGenerator {
@@ -65,10 +67,11 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const NewExercisePage());
       case Routes.changeWeightRoute:
         return MaterialPageRoute(builder: (_) => const ChangeWeightPage());
-
       case Routes.changeMeasurementsRoute:
         return MaterialPageRoute(
             builder: (_) => const ChangeMeasurementsPage());
+      case Routes.setGoalRoute:
+        return MaterialPageRoute(builder: (_) => const SetGoalPage());
       default:
         return undefinedRoute();
     }

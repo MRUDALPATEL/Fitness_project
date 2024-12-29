@@ -4,21 +4,101 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Fitness/model/meal_model.dart';
 import 'package:Fitness/model/water_model.dart';
+import 'package:Fitness/utils/notifications/notification_manager.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class ConsumptionProvider with ChangeNotifier {
-  final List<MealModel> _meals = [];
-  final List<WaterModel> _water = [];
-  double kCalaDay = 0.0;
-  double waterADay = 0.0;
+  double goalCalories = 0.0;
+  double goalCarbs = 0.0;
+  double goalProteins = 0.0;
+  double goalFats = 0.0;
 
-  List<MealModel> get meals {
-    return [..._meals];
+  double currentCalories = 0.0;
+  double currentCarbs = 0.0;
+  double currentProteins = 0.0;
+  double currentFats = 0.0;
+
+
+ double kCalaDay = 0.0;
+ double waterADay = 0.0;
+ double goalValue = 0.0;
+
+
+  // Set goals
+  void setGoalCalories(double value) {
+    goalCalories = value;
+    notifyListeners();
   }
 
-  List<WaterModel> get water {
-    return [..._water];
+  void setGoalCarbs(double value) {
+    goalCarbs = value;
+    notifyListeners();
   }
 
+  void setGoalProteins(double value) {
+    goalProteins = value;
+    notifyListeners();
+  }
+
+  void setGoalFats(double value) {
+    goalFats = value;
+    notifyListeners();
+  }
+
+  // Log consumption
+  void logCalories(double value) {
+    currentCalories += value;
+    notifyListeners();
+  }
+
+  void logCarbs(double value) {
+    currentCarbs += value;
+    notifyListeners();
+  }
+
+  void logProteins(double value) {
+    currentProteins += value;
+    notifyListeners();
+  }
+
+  void logFats(double value) {
+    currentFats += value;
+    notifyListeners();
+  }
+
+  // Reset progress
+  void resetProgress() {
+    currentCalories = 0.0;
+    currentCarbs = 0.0;
+    currentProteins = 0.0;
+    currentFats = 0.0;
+    notifyListeners();
+  }
+ 
+
+  final NotificationManager _notificationManager = NotificationManager();
+
+  final List<MealModel> meals = [];
+final List<WaterModel> water = [];
+
+
+  // Progress calculation
+ double calculateProgress(double achieved, double goal) {
+  if (goal == 0) {
+    return 0; // No progress if goal is not set
+  }
+  double progress = (achieved / goal) * 100;
+  return progress > 100 ? 100 : progress; // Cap progress at 100%
+}
+
+
+  double getGoalProgress() {
+  // Debug logs for checking values during runtime
+  print('Calories Today (Achieved): $kCalaDay, Goal Value: $goalValue');
+  return calculateProgress(kCalaDay, goalValue);
+}
+
+  /// Meals Handling
   Future<void> addNewMeal({
     required String title,
     required double amount,
@@ -30,7 +110,6 @@ class ConsumptionProvider with ChangeNotifier {
   }) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
-
       await FirebaseFirestore.instance
           .collection('meals')
           .doc(user!.uid)
@@ -51,34 +130,34 @@ class ConsumptionProvider with ChangeNotifier {
     }
   }
 
-  Future fetchAndSetMeals() async {
+  Future<void> fetchAndSetMeals() async {
     User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
 
     try {
       final mealsSnapshot = await FirebaseFirestore.instance
           .collection('meals')
-          .doc(user!.uid)
+          .doc(user.uid)
           .collection('mealData')
           .get();
 
-      final List<MealModel> loadedMeals = [];
-
-      for (var doc in mealsSnapshot.docs) {
+      final List<MealModel> loadedMeals = mealsSnapshot.docs.map((doc) {
         final mealData = doc.data();
-        loadedMeals.add(MealModel(
+        return MealModel(
           id: doc.id,
           title: mealData['title'],
-          amount: mealData['amount'],
-          calories: mealData['calories'],
-          fats: mealData['fats'],
-          carbs: mealData['carbs'],
-          proteins: mealData['proteins'],
+          amount: (mealData['amount'] as num).toDouble(),
+          calories: (mealData['calories'] as num).toDouble(),
+          carbs: (mealData['carbs'] as num).toDouble(),
+          fats: (mealData['fats'] as num).toDouble(),
+          proteins: (mealData['proteins'] as num).toDouble(),
           dateTime: (mealData['dateTime'] as Timestamp).toDate(),
-        ));
-      }
+        );
+      }).toList();
+
       loadedMeals.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-      _meals.clear();
-      _meals.addAll(loadedMeals);
+      meals.clear();
+      meals.addAll(loadedMeals);
       await getkCal();
       notifyListeners();
     } catch (e) {
@@ -86,59 +165,35 @@ class ConsumptionProvider with ChangeNotifier {
     }
   }
 
-  getkCal() async {
-    kCalaDay = 0.0;
-    for (var meal in _meals) {
-      kCalaDay += meal.calories;
+  Future<void> deleteMeal(String id) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    try {
+      await FirebaseFirestore.instance
+          .collection('meals')
+          .doc(user!.uid)
+          .collection('mealData')
+          .doc(id)
+          .delete();
+      meals.removeWhere((meal) => meal.id == id);
+      await getkCal();
+      notifyListeners();
+    } catch (e) {
+      rethrow;
     }
+  }
+
+  Future<void> getkCal() async {
+    kCalaDay = meals.fold(0.0, (sum, meal) => sum + meal.calories);
     notifyListeners();
   }
 
-  Future<void> clearMealsIfDayChanges(DateTime lastDateTime) async {
-    DateTime now = DateTime.now();
-
-    if (isLastDateTimeDifferent(now, lastDateTime)) {
-      try {
-        User? user = FirebaseAuth.instance.currentUser;
-
-        await FirebaseFirestore.instance
-            .collection('meals')
-            .doc(user!.uid)
-            .collection('mealData')
-            .get()
-            .then((querySnapshot) {
-          for (var doc in querySnapshot.docs) {
-            DateTime mealDateTime = (doc['dateTime'] as Timestamp).toDate();
-            if (isInputTimeDifferent(now, mealDateTime)) {
-              doc.reference.delete();
-            }
-          }
-        });
-      } catch (e) {
-        rethrow;
-      }
-    }
-  }
-
-  bool isLastDateTimeDifferent(DateTime now, DateTime lastDateTime) {
-    return now.year != lastDateTime.year ||
-        now.month != lastDateTime.month ||
-        now.day != lastDateTime.day;
-  }
-
-  bool isInputTimeDifferent(DateTime now, DateTime inputDateTime) {
-    return now.year != inputDateTime.year ||
-        now.month != inputDateTime.month ||
-        now.day != inputDateTime.day;
-  }
-
+  /// Water Handling
   Future<void> addWater({
     required double amount,
     required DateTime dateTime,
   }) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
-
       await FirebaseFirestore.instance
           .collection('meals')
           .doc(user!.uid)
@@ -154,28 +209,28 @@ class ConsumptionProvider with ChangeNotifier {
     }
   }
 
-  Future fetchAndSetWater() async {
+  Future<void> fetchAndSetWater() async {
     User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
 
     try {
-      final mealsSnapshot = await FirebaseFirestore.instance
+      final waterSnapshot = await FirebaseFirestore.instance
           .collection('meals')
-          .doc(user!.uid)
+          .doc(user.uid)
           .collection('waterData')
           .get();
 
-      final List<WaterModel> loadedWater = [];
-
-      for (var doc in mealsSnapshot.docs) {
-        final mealData = doc.data();
-        loadedWater.add(WaterModel(
+      final List<WaterModel> loadedWater = waterSnapshot.docs.map((doc) {
+        final waterData = doc.data();
+        return WaterModel(
           id: doc.id,
-          amount: mealData['amount'],
-          dateTime: (mealData['dateTime'] as Timestamp).toDate(),
-        ));
-      }
-      _water.clear();
-      _water.addAll(loadedWater);
+          amount: (waterData['amount'] as num).toDouble(),
+          dateTime: (waterData['dateTime'] as Timestamp).toDate(),
+        );
+      }).toList();
+
+      water.clear();
+      water.addAll(loadedWater);
       await getWater();
       notifyListeners();
     } catch (e) {
@@ -183,52 +238,68 @@ class ConsumptionProvider with ChangeNotifier {
     }
   }
 
-  getWater() async {
-    waterADay = 0.0;
-    for (var water in _water) {
-      waterADay += water.amount;
-    }
+  Future<void> getWater() async {
+    waterADay = water.fold(0.0, (sum, water) => sum + water.amount);
     notifyListeners();
   }
 
-  Future<void> clearWaterIfDayChanges(DateTime lastDateTime) async {
-    DateTime now = DateTime.now();
-
-    if (isLastDateTimeDifferent(now, lastDateTime)) {
-      try {
-        User? user = FirebaseAuth.instance.currentUser;
-
-        await FirebaseFirestore.instance
-            .collection('meals')
-            .doc(user!.uid)
-            .collection('waterData')
-            .get()
-            .then((querySnapshot) {
-          for (var doc in querySnapshot.docs) {
-            DateTime waterDateTime = (doc['dateTime'] as Timestamp).toDate();
-            if (isInputTimeDifferent(now, waterDateTime)) {
-              doc.reference.delete();
-            }
-          }
-        });
-      } catch (e) {
-        rethrow;
-      }
+  /// Goal Handling
+  Future<void> setGoal({
+    required String goalType,
+    required double goalValue,
+    required String duration,
+  }) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      await FirebaseFirestore.instance
+          .collection('goals')
+          .doc(user!.uid)
+          .set({
+        'goalType': goalType,
+        'goalValue': goalValue,
+        'duration': duration,
+      });
+      notifyListeners();
+    } catch (e) {
+      rethrow;
     }
   }
 
-  Future<void> deleteMeal(String mealID) async {
+  /// Notifications
+  Future<void> sendNotification({
+    required String title,
+    required String body,
+    required DateTime scheduledTime,
+  }) async {
     try {
-      User? user = FirebaseAuth.instance.currentUser;
-
-      await FirebaseFirestore.instance
-          .collection('meals')
-          .doc(user!.uid)
-          .collection('mealData')
-          .doc(mealID)
-          .delete();
+      await _notificationManager.scheduleNotification(
+        id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title: title,
+        body: body,
+        scheduledTime: tz.TZDateTime.from(scheduledTime, tz.local),
+      );
     } catch (e) {
       rethrow;
+    }
+  }
+
+   Future<void> clearMealsIfDayChanges(DateTime lastMealDateTime) async {
+    final now = DateTime.now();
+    if (now.year > lastMealDateTime.year ||
+        now.month > lastMealDateTime.month ||
+        now.day > lastMealDateTime.day) {
+      meals.clear();
+      notifyListeners();
+    }
+  }
+
+   Future<void> clearWaterIfDayChanges(DateTime lastWaterDateTime) async {
+    final now = DateTime.now();
+    if (now.year > lastWaterDateTime.year ||
+        now.month > lastWaterDateTime.month ||
+        now.day > lastWaterDateTime.day) {
+      water.clear();
+      notifyListeners();
     }
   }
 }

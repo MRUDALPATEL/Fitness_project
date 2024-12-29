@@ -17,6 +17,7 @@ import 'package:Fitness/presentation/settings/pages/settings_page.dart';
 import 'package:Fitness/presentation/workouts/providers/workout_provider.dart';
 import 'package:Fitness/utils/managers/color_manager.dart';
 import 'package:Fitness/utils/managers/value_manager.dart';
+import 'package:Fitness/utils/notifications/notification_manager.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -26,6 +27,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final NotificationManager _notificationManager = NotificationManager();
   var _currentIndex = 0;
   ontap(int index) {
     setState(() {
@@ -64,6 +66,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    _notificationManager.init();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final consumptionProvider =
           Provider.of<ConsumptionProvider>(context, listen: false);

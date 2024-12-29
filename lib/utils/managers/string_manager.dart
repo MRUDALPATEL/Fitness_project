@@ -210,4 +210,8 @@ class StringsManager {
   static const String declineBenchPressBarBell = 'Decline Bench Press(Barbell)';
   static const String declineBenchPressDumBell = 'Decline Bench Press(Dumbell)';
   static const String declineBenchPressMachine = 'Decline Bench Press(Machine)';
+  static const String setGoal = 'Set Goal';
+  static const String goalType = 'Goal Type';
+  static const String goalValue = 'Goal Value';
+  static const String duration = 'Duration';
 }
