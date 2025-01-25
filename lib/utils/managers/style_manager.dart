@@ -1,8 +1,9 @@
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/font_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/font_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
+
 
 class StyleManager {
   static final splashText1TextStyle = TextStyle(
@@ -246,7 +247,7 @@ class StyleManager {
     fontSize: FontSize.s18.sp,
     letterSpacing: SizeManager.s0_7,
   );
-  static final fitnessBmiTextStyle = TextStyle(
+  static final fitnessappBmiTextStyle = TextStyle(
     color: ColorManager.white2,
     fontSize: FontSize.s12.sp,
     fontWeight: FontWightManager.regular,

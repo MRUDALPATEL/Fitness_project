@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Fitness/utils/managers/asset_manager.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
-import 'package:Fitness/presentation/boarding/widgets/slider_boarding.dart';
+import 'package:fitnessapp/utils/managers/asset_manager.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
+import 'package:fitnessapp/presentation/boarding/widgets/slider_boarding.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class BoardingPage extends StatefulWidget {

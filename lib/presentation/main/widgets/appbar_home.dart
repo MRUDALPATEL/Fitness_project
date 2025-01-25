@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/home/providers/home_provider.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
+import 'package:fitnessapp/presentation/home/providers/home_provider.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
 
 class HomePageAppBarWidget extends StatelessWidget {
   const HomePageAppBarWidget({

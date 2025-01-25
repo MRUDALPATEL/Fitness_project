@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/consumption/providers/consumption_provider.dart';
-import 'package:Fitness/presentation/consumption/widgets/quick_water_add_button.dart';
-import 'package:Fitness/utils/managers/asset_manager.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
-import 'package:Fitness/utils/widgets/lime_green_rounded_button.dart';
-import 'package:Fitness/utils/widgets/text_field_underlined.dart';
+import 'package:fitnessapp/presentation/consumption/providers/consumption_provider.dart';
+import 'package:fitnessapp/presentation/consumption/widgets/quick_water_add_button.dart';
+import 'package:fitnessapp/utils/managers/asset_manager.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
+import 'package:fitnessapp/utils/widgets/lime_green_rounded_button.dart';
+import 'package:fitnessapp/utils/widgets/text_field_underlined.dart';
 
 class DrinkPage extends StatefulWidget {
   const DrinkPage({super.key});

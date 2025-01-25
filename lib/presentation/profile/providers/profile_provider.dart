@@ -145,42 +145,31 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> fetchAndSetFlSpots() async {
-    User? user = FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
 
-    try {
-      final flSpotSnapshot = await FirebaseFirestore.instance
-          .collection('flSpots')
-          .doc(user!.uid)
-          .collection('flSpotsData')
-          .get();
+  try {
+    final flSpotSnapshot = await FirebaseFirestore.instance
+        .collection('flSpots')
+        .doc(user!.uid)
+        .collection('flSpotsData')
+        .get();
 
-      final List<FlSpot> loadedFlSpots = [];
+    final List<FlSpot> loadedFlSpots = flSpotSnapshot.docs.map((doc) {
+      final data = doc.data();
+      return FlSpot(
+        (data['weightDateTime'] as int).toDouble(),
+        data['weight'] as double,
+      );
+    }).toList();
 
-      for (var doc in flSpotSnapshot.docs) {
-        final flspotsData = doc.data();
-        int month = flspotsData['weightDateTime'];
-
-        int index = _flSpots.indexWhere((spot) => spot.x == month.toDouble());
-        if (index != -1) {
-          _flSpots[index] = FlSpot(
-            month.toDouble(),
-            flspotsData['weight'],
-          );
-        } else {
-          loadedFlSpots.add(
-            FlSpot(
-              month.toDouble(),
-              flspotsData['weight'],
-            ),
-          );
-        }
-      }
-      _flSpots.addAll(loadedFlSpots);
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    }
+    _flSpots.clear();
+    _flSpots.addAll(loadedFlSpots);
+    notifyListeners();
+  } catch (e) {
+    rethrow;
   }
+}
+
 
   Future<void> updateUsersData({
     required String activity,

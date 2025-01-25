@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:Fitness/model/meal_model.dart';
-import 'package:Fitness/model/water_model.dart';
-import 'package:Fitness/utils/notifications/notification_manager.dart';
+import 'package:fitnessapp/model/meal_model.dart';
+import 'package:fitnessapp/model/water_model.dart';
+import 'package:fitnessapp/utils/notifications/notification_manager.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class ConsumptionProvider with ChangeNotifier {
@@ -100,70 +100,92 @@ final List<WaterModel> water = [];
 
   /// Meals Handling
   Future<void> addNewMeal({
-    required String title,
-    required double amount,
-    required double calories,
-    required double fats,
-    required double carbs,
-    required double proteins,
-    required DateTime dateTime,
-  }) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      await FirebaseFirestore.instance
-          .collection('meals')
-          .doc(user!.uid)
-          .collection('mealData')
-          .doc()
-          .set({
-        'title': title,
-        'amount': amount,
-        'calories': calories,
-        'fats': fats,
-        'carbs': carbs,
-        'proteins': proteins,
-        'dateTime': dateTime,
-      });
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<void> fetchAndSetMeals() async {
+  required String title,
+  required double amount,
+  required double calories,
+  required double fats,
+  required double carbs,
+  required double proteins,
+  required DateTime dateTime,
+}) async {
+  try {
     User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
-    try {
-      final mealsSnapshot = await FirebaseFirestore.instance
-          .collection('meals')
-          .doc(user.uid)
-          .collection('mealData')
-          .get();
-
-      final List<MealModel> loadedMeals = mealsSnapshot.docs.map((doc) {
-        final mealData = doc.data();
-        return MealModel(
-          id: doc.id,
-          title: mealData['title'],
-          amount: (mealData['amount'] as num).toDouble(),
-          calories: (mealData['calories'] as num).toDouble(),
-          carbs: (mealData['carbs'] as num).toDouble(),
-          fats: (mealData['fats'] as num).toDouble(),
-          proteins: (mealData['proteins'] as num).toDouble(),
-          dateTime: (mealData['dateTime'] as Timestamp).toDate(),
-        );
-      }).toList();
-
-      loadedMeals.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-      meals.clear();
-      meals.addAll(loadedMeals);
-      await getkCal();
-      notifyListeners();
-    } catch (e) {
-      rethrow;
+    if (user == null) {
+      print('User is not authenticated');
+      return;
     }
+
+    await FirebaseFirestore.instance
+        .collection('meals')
+        .doc(user.uid)
+        .collection('mealData')
+        .doc()
+        .set({
+      'title': title,
+      'amount': amount,
+      'calories': calories,
+      'fats': fats,
+      'carbs': carbs,
+      'proteins': proteins,
+      'dateTime': dateTime,
+    });
+    print('Meal added successfully');
+    notifyListeners();
+  } catch (e) {
+    print('Error adding meal: $e');
+    rethrow;
   }
+}
+
+
+ Future<void> fetchAndSetMeals() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    print('User is not authenticated');
+    return;
+  }
+
+  try {
+    print("Fetching meals...");
+
+    final mealsSnapshot = await FirebaseFirestore.instance
+        .collection('meals')
+        .doc(user.uid)
+        .collection('mealData')
+        .get()
+        .timeout(const Duration(seconds: 10));
+
+    if (mealsSnapshot.docs.isEmpty) {
+      print("No meals found in Firestore.");
+    } else {
+      print("Meals fetched: ${mealsSnapshot.docs.length}");
+    }    
+
+    final List<MealModel> loadedMeals = mealsSnapshot.docs.map((doc) {
+      final mealData = doc.data();
+      return MealModel(
+        id: doc.id,
+        title: mealData['title'],
+        amount: (mealData['amount'] as num).toDouble(),
+        calories: (mealData['calories'] as num).toDouble(),
+        carbs: (mealData['carbs'] as num).toDouble(),
+        fats: (mealData['fats'] as num).toDouble(),
+        proteins: (mealData['proteins'] as num).toDouble(),
+        dateTime: (mealData['dateTime'] as Timestamp).toDate(),
+      );
+    }).toList();
+
+    loadedMeals.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    meals.clear();
+    meals.addAll(loadedMeals);
+    print('Meals fetched successfully');
+    await getkCal();
+    notifyListeners();
+  } catch (e) {
+    print('Error fetching meals: $e');
+    rethrow;
+  }
+}
 
   Future<void> deleteMeal(String id) async {
     User? user = FirebaseAuth.instance.currentUser;

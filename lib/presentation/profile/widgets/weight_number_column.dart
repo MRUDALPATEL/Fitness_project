@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
 
 class WeightNumberColumnWidget extends StatelessWidget {
   const WeightNumberColumnWidget({

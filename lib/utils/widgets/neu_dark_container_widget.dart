@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
 
 class NeuButton extends StatelessWidget {
   const NeuButton({

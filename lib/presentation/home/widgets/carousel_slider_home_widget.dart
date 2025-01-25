@@ -1,9 +1,9 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:Fitness/presentation/home/widgets/carousel_home_box.dart';
-import 'package:Fitness/utils/managers/asset_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
+import 'package:fitnessapp/presentation/home/widgets/carousel_home_box.dart';
+import 'package:fitnessapp/utils/managers/asset_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
 
 class CarouselSliderHomeWidget extends StatelessWidget {
   const CarouselSliderHomeWidget({

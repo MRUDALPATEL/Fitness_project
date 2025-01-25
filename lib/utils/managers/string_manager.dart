@@ -39,7 +39,7 @@ class StringsManager {
   static const String genderHint = 'Gender';
   static const String genderManHint = 'MAN';
   static const String genderWomanHint = 'WOMAN';
-  static const String fitnessioABtitle = 'FITNESS.IO';
+  static const String fitnessappioABtitle = 'FITNESS.IO';
   static const String accountSpacer = 'Account';
   static const String generalSpacer = 'General';
   static const String inviteFriend = 'Invite Friends';

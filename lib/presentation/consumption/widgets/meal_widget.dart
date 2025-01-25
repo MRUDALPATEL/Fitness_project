@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:Fitness/presentation/consumption/widgets/percent_value_of_meal.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
+import 'package:fitnessapp/presentation/consumption/widgets/percent_value_of_meal.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
 
 class MealWidget extends StatelessWidget {
   const MealWidget({
@@ -142,17 +142,23 @@ class MealWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     PercentValueOfMeal(
-                      value: fats,
+                      value: amount > 0
+                          ? (fats / amount)
+                          : 0.0, // Handle zero amount
                       amount: amount,
                       title: StringsManager.fats,
                     ),
                     PercentValueOfMeal(
-                      value: carbs,
+                      value: amount > 0
+                          ? carbs / amount
+                          : 0.0, // Handle zero amount
                       amount: amount,
                       title: StringsManager.carbs,
                     ),
                     PercentValueOfMeal(
-                      value: proteins,
+                      value: amount > 0
+                          ? proteins / amount
+                          : 0.0, // Handle zero amount
                       amount: amount,
                       title: StringsManager.proteins,
                     ),

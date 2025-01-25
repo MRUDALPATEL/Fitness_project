@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:slide_to_act/slide_to_act.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/router/router.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
+
+import '../../../utils/managers/color_manager.dart';
+import '../../../utils/managers/string_manager.dart';
+import '../../../utils/managers/value_manager.dart';
+import '../../../utils/router/router.dart';
+
 
 class SliderBoardingWidget extends StatelessWidget {
   const SliderBoardingWidget({

@@ -1,14 +1,15 @@
+import 'package:fitnessapp/utils/managers/color_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/auth/providers/auth_provider.dart';
-import 'package:Fitness/presentation/auth/widgets/add_data_widgets.dart';
-import 'package:Fitness/presentation/home/providers/home_provider.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/router/router.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
-import 'package:Fitness/utils/widgets/lime_green_rounded_button.dart';
+
+import '../../../utils/managers/string_manager.dart';
+import '../../../utils/managers/style_manager.dart';
+import '../../../utils/managers/value_manager.dart';
+import '../../../utils/router/router.dart';
+import '../../../utils/widgets/lime_green_rounded_button.dart';
+import '../../home/providers/home_provider.dart';
+import '../providers/auth_provider.dart';
+import '../widgets/add_data_widgets.dart';
 
 class AddDataPage extends StatefulWidget {
   const AddDataPage({super.key});

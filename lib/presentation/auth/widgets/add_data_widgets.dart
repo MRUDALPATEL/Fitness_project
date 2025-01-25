@@ -1,12 +1,12 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Fitness/utils/widgets/small_text_field_widget.dart';
-import 'package:Fitness/utils/widgets/text_field_underlined.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
+import 'package:fitnessapp/utils/widgets/small_text_field_widget.dart';
+import 'package:fitnessapp/utils/widgets/text_field_underlined.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
 
 // ignore: must_be_immutable
 class AddDataWidgets extends StatelessWidget {

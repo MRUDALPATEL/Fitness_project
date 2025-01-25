@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/auth/providers/auth_provider.dart';
-import 'package:Fitness/utils/widgets/text_field_widget.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/font_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
-import 'package:Fitness/utils/widgets/lime_green_rounded_button.dart';
+import 'package:fitnessapp/presentation/auth/providers/auth_provider.dart';
+import 'package:fitnessapp/utils/widgets/text_field_widget.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/font_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
+import 'package:fitnessapp/utils/widgets/lime_green_rounded_button.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});

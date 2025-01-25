@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/consumption/providers/consumption_provider.dart';
+import 'package:fitnessapp/presentation/consumption/providers/consumption_provider.dart';
 
 class GoalProgressBar extends StatelessWidget {
+  const GoalProgressBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     final consumptionProvider =
@@ -46,19 +48,19 @@ class GoalProgressBar extends StatelessWidget {
           progress: caloriesProgress,
           progressColor: Colors.green,
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         ProgressIndicatorRow(
           title: "Carbs Progress",
           progress: carbsProgress,
           progressColor: Colors.blue,
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         ProgressIndicatorRow(
           title: "Proteins Progress",
           progress: proteinsProgress,
           progressColor: Colors.orange,
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         ProgressIndicatorRow(
           title: "Fats Progress",
           progress: fatsProgress,
@@ -88,16 +90,16 @@ class ProgressIndicatorRow extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         LinearPercentIndicator(
           lineHeight: 14.0,
           percent: progress, // Ensures it's clamped between 0.0 and 1.0
           center: Text(
             "${(progress * 100).toStringAsFixed(1)}%",
-            style: TextStyle(fontSize: 12),
+            style: const TextStyle(fontSize: 12),
           ),
-          backgroundColor: Colors.grey[300]!,
+          backgroundColor: Colors.green,
           progressColor: progressColor,
         ),
       ],

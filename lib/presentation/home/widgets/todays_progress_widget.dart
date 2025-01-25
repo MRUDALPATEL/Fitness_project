@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/workouts/providers/workout_provider.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
+import 'package:fitnessapp/presentation/workouts/providers/workout_provider.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
 
 class TodaysProgressWidget extends StatelessWidget {
   const TodaysProgressWidget({
@@ -33,7 +33,7 @@ class TodaysProgressWidget extends StatelessWidget {
         var isResetDay = progressPercent.isNaN &&
             shownPercent.isNaN &&
             workoutProvider.workouts.isEmpty &&
-            workoutProvider.finishedWourkouts.isEmpty;
+            workoutProvider.finishedWorkouts.isEmpty;
         if (isResetDay) {
           progressPercent = 0.0;
           shownPercent = 0.0;
@@ -46,14 +46,14 @@ class TodaysProgressWidget extends StatelessWidget {
               style: StyleManager.homePageS14RegularWhite2L1,
               textAlign: TextAlign.left,
             );
-          } else if (workoutProvider.finishedWourkouts.isEmpty &&
+          } else if (workoutProvider.finishedWorkouts.isEmpty &&
               workoutProvider.workouts.isEmpty) {
             return Text(
               StringsManager.startYourExercises,
               style: StyleManager.homePageS14RegularWhite2L1,
               textAlign: TextAlign.left,
             );
-          } else if (workoutProvider.finishedWourkouts.isNotEmpty &&
+          } else if (workoutProvider.finishedWorkouts.isNotEmpty &&
               workoutProvider.workouts.isEmpty) {
             return Text(
               StringsManager.exercisesDoneTxt,

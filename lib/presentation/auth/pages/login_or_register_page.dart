@@ -3,15 +3,15 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:Fitness/presentation/auth/providers/auth_provider.dart';
-import 'package:Fitness/presentation/auth/widgets/login_or_register_view.dart';
-import 'package:Fitness/utils/managers/asset_manager.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
-import 'package:Fitness/utils/router/router.dart';
-import 'package:Fitness/utils/widgets/lime_green_rounded_button.dart';
+import 'package:fitnessapp/presentation/auth/providers/auth_provider.dart';
+import 'package:fitnessapp/presentation/auth/widgets/login_or_register_view.dart';
+import 'package:fitnessapp/utils/managers/asset_manager.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
+import 'package:fitnessapp/utils/router/router.dart';
+import 'package:fitnessapp/utils/widgets/lime_green_rounded_button.dart';
 
 enum AuthMode { signUp, signIn }
 
@@ -27,7 +27,8 @@ class _LoginPageState extends State<LoginPage>
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final TextEditingController _repeatPasswordController = TextEditingController();
+  final TextEditingController _repeatPasswordController =
+      TextEditingController();
   AuthMode _authMode = AuthMode.signIn;
 
   @override
@@ -43,7 +44,9 @@ class _LoginPageState extends State<LoginPage>
   bool get isRegisterView => _authMode == AuthMode.signUp;
   bool get isLoginView => _authMode == AuthMode.signIn;
 
+  // Inside the _switchAuthMode method
   void _switchAuthMode() {
+    debugPrint('Switching Auth Mode: ${isLoginView ? 'SignUp' : 'SignIn'}');
     if (isLoginView) {
       setState(() {
         _authMode = AuthMode.signUp;
@@ -55,11 +58,15 @@ class _LoginPageState extends State<LoginPage>
     }
   }
 
+  // Inside the _signInWithGoogle method
   Future<void> _signInWithGoogle() async {
     try {
-      await Provider.of<AuthProvider>(context, listen: false).signInWithGoogle(context);
+      debugPrint('Attempting Google Sign-In');
+      await Provider.of<AuthProvider>(context, listen: false)
+          .signInWithGoogle(context);
+      debugPrint('Google Sign-In Successful');
     } catch (e) {
-      // Handle error
+      debugPrint('Google Sign-In Failed: $e');
     }
   }
 
@@ -67,31 +74,41 @@ class _LoginPageState extends State<LoginPage>
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
+    // Inside signUserIn method
     Future<void> signUserIn() async {
       try {
+        debugPrint('Attempting Sign-In with Email: ${_emailController.text}');
         await authProvider.signIn(
           email: _emailController.text,
           password: _passwordController.text,
           context: context,
         );
+        debugPrint('Sign-In Successful');
       } catch (e) {
+        debugPrint('Sign-In Failed: $e');
         rethrow;
       }
     }
 
+// Inside signUserUp method
     Future<void> signUserUp() async {
       try {
+        debugPrint('Attempting Sign-Up with Email: ${_emailController.text}');
         await authProvider.register(
           email: _emailController.text,
           password: _passwordController.text,
           context: context,
         );
+        debugPrint('Sign-Up Successful');
       } catch (e) {
+        debugPrint('Sign-Up Failed: $e');
         rethrow;
       }
     }
 
+// Inside onPressed function
     void onPressed() {
+      debugPrint('Auth Button Pressed: ${isLoginView ? 'SignIn' : 'SignUp'}');
       if (isLoginView) {
         signUserIn();
       } else if (isRegisterView) {

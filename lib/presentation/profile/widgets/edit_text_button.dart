@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
 
 class EditTextButton extends StatelessWidget {
   const EditTextButton({
@@ -23,24 +23,26 @@ class EditTextButton extends StatelessWidget {
         alignment: Alignment.centerRight,
         child: GestureDetector(
           onTap: onTap,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                StringsManager.edit,
-                textAlign: TextAlign.right,
-                style: StyleManager.editTextButtonTextStyle,
-              ),
-              SizedBox(
-                width: SizeManager.s3.w,
-              ),
-              const Icon(
-                Icons.edit,
-                color: ColorManager.white,
-                size: SizeManager.s18,
-              )
-            ],
+          child: Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  StringsManager.edit,
+                  textAlign: TextAlign.right,
+                  style: StyleManager.editTextButtonTextStyle,
+                ),
+                SizedBox(
+                  width: SizeManager.s3.w,
+                ),
+                const Icon(
+                  Icons.edit,
+                  color: ColorManager.white,
+                  size: SizeManager.s18,
+                ),
+              ],
+            ),
           ),
         ),
       ),

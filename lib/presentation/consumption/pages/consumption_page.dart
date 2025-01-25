@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/consumption/providers/consumption_provider.dart';
-import 'package:Fitness/presentation/consumption/widgets/meal_widget.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
-import 'package:Fitness/utils/router/router.dart';
+import 'package:fitnessapp/presentation/consumption/providers/consumption_provider.dart';
+import 'package:fitnessapp/presentation/consumption/widgets/meal_widget.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
+import 'package:fitnessapp/utils/router/router.dart';
 
 class ConsumptionPage extends StatefulWidget {
   const ConsumptionPage({super.key});
@@ -28,11 +28,16 @@ class _ConsumptionPageState extends State<ConsumptionPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<ConsumptionProvider>(
-      builder: (context, consumptionProvider, _) => SafeArea(
+Widget build(BuildContext context) {
+  return Consumer<ConsumptionProvider>(
+    builder: (context, consumptionProvider, _) {
+      if (consumptionProvider.meals.isEmpty) {
+        return const Center(child: CircularProgressIndicator());  // Show loading indicator if meals are empty
+      }
+
+      return SafeArea(
         child: LiquidPullToRefresh(
-          height: 80.h, // Adjusted height
+          height: 80.h,
           color: ColorManager.darkGrey,
           animSpeedFactor: 2,
           backgroundColor: ColorManager.white2,
@@ -132,7 +137,9 @@ class _ConsumptionPageState extends State<ConsumptionPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
+}
+
 }

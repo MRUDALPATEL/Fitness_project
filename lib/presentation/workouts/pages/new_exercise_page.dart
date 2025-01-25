@@ -2,16 +2,16 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/workouts/providers/workout_provider.dart';
-import 'package:Fitness/presentation/workouts/widgets/workouts_app_bar.dart';
-import 'package:Fitness/utils/managers/asset_manager.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/list_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
-import 'package:Fitness/utils/widgets/lime_green_rounded_button.dart';
-import 'package:Fitness/utils/widgets/small_text_field_widget.dart';
+import 'package:fitnessapp/presentation/workouts/providers/workout_provider.dart';
+import 'package:fitnessapp/presentation/workouts/widgets/workouts_app_bar.dart';
+import 'package:fitnessapp/utils/managers/asset_manager.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/list_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
+import 'package:fitnessapp/utils/widgets/lime_green_rounded_button.dart';
+import 'package:fitnessapp/utils/widgets/small_text_field_widget.dart';
 
 class NewExercisePage extends StatefulWidget {
   const NewExercisePage({super.key});

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/auth/providers/auth_provider.dart';
-import 'package:Fitness/presentation/consumption/providers/consumption_provider.dart';
-import 'package:Fitness/presentation/home/providers/home_provider.dart';
-import 'package:Fitness/presentation/profile/providers/profile_provider.dart';
-import 'package:Fitness/presentation/settings/providers/settings_provider.dart';
-import 'package:Fitness/presentation/workouts/providers/workout_provider.dart';
-import 'package:Fitness/utils/router/router.dart';
+import 'package:fitnessapp/presentation/auth/providers/auth_provider.dart';
+import 'package:fitnessapp/presentation/consumption/providers/consumption_provider.dart';
+import 'package:fitnessapp/presentation/home/providers/home_provider.dart';
+import 'package:fitnessapp/presentation/profile/providers/profile_provider.dart';
+import 'package:fitnessapp/presentation/settings/providers/settings_provider.dart';
+import 'package:fitnessapp/presentation/workouts/providers/workout_provider.dart';
+import 'package:fitnessapp/utils/router/router.dart';
 
 // ignore: must_be_immutable
 class MyApp extends StatefulWidget {

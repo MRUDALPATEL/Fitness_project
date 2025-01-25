@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:Fitness/presentation/settings/widgets/button_settings.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
-import 'package:Fitness/utils/router/router.dart';
+import 'package:fitnessapp/presentation/settings/widgets/button_settings.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
+import 'package:fitnessapp/utils/router/router.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -38,13 +38,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-            SettingsPageButton(
+            /* SettingsPageButton(
               deviceWidth: deviceWidth,
               onTap: () =>
                   Navigator.of(context).pushNamed(Routes.changeEmailRoute),
               iconData: Icons.email_outlined,
               title: StringsManager.changeEmail,
-            ),
+            ), */
             SettingsPageButton(
               deviceWidth: deviceWidth,
               onTap: () =>
@@ -73,23 +73,23 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-            SettingsPageButton(
+           /*  SettingsPageButton(
               deviceWidth: deviceWidth,
               onTap: () {
                 //TODO:
               },
               iconData: Icons.nightlight_outlined,
               title: StringsManager.theme,
-            ),
-            SettingsPageButton(
+            ), */
+            /* SettingsPageButton(
               deviceWidth: deviceWidth,
               onTap: () {
                 //TODO:
               },
               iconData: Icons.help_outline,
               title: StringsManager.support,
-            ),
-            SettingsPageButton(
+            ), */
+            /* SettingsPageButton(
               deviceWidth: deviceWidth,
               onTap: () {
                 //TODO:
@@ -104,7 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               iconData: Icons.person_add_alt_1_outlined,
               title: StringsManager.inviteFriend,
-            ),
+            ), */
           ],
         ).animate().fadeIn(
               duration: 500.ms,

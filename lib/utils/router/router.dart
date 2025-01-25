@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:Fitness/presentation/auth/pages/add_data_page.dart';
-import 'package:Fitness/presentation/auth/pages/auth_page.dart';
-import 'package:Fitness/presentation/auth/pages/forgot_password_page.dart';
-import 'package:Fitness/presentation/boarding/pages/boarding_page.dart';
-import 'package:Fitness/presentation/consumption/pages/drink_page.dart';
-import 'package:Fitness/presentation/consumption/pages/new_meal_page.dart';
-import 'package:Fitness/presentation/consumption/pages/set_goal_page.dart';
-import 'package:Fitness/presentation/main/pages/main_page.dart';
-import 'package:Fitness/presentation/auth/pages/login_or_register_page.dart';
-import 'package:Fitness/presentation/notifications/pages/notifications_page.dart';
-import 'package:Fitness/presentation/profile/pages/change_measurements_page.dart';
-import 'package:Fitness/presentation/settings/pages/change_email_page.dart';
-import 'package:Fitness/presentation/settings/pages/change_password_page.dart';
-import 'package:Fitness/presentation/profile/pages/change_weight_page.dart';
-import 'package:Fitness/presentation/settings/pages/delete_account_page.dart';
-import 'package:Fitness/presentation/workouts/pages/new_exercise_page.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
+import 'package:fitnessapp/presentation/auth/pages/add_data_page.dart';
+import 'package:fitnessapp/presentation/auth/pages/auth_page.dart';
+import 'package:fitnessapp/presentation/auth/pages/forgot_password_page.dart';
+import 'package:fitnessapp/presentation/boarding/pages/boarding_page.dart';
+import 'package:fitnessapp/presentation/consumption/pages/drink_page.dart';
+import 'package:fitnessapp/presentation/consumption/pages/new_meal_page.dart';
+import 'package:fitnessapp/presentation/consumption/pages/set_goal_page.dart';
+import 'package:fitnessapp/presentation/main/pages/main_page.dart';
+import 'package:fitnessapp/presentation/auth/pages/login_or_register_page.dart';
+import 'package:fitnessapp/presentation/notifications/pages/notifications_page.dart';
+import 'package:fitnessapp/presentation/profile/pages/change_measurements_page.dart';
+import 'package:fitnessapp/presentation/settings/pages/change_email_page.dart';
+import 'package:fitnessapp/presentation/settings/pages/change_password_page.dart';
+import 'package:fitnessapp/presentation/profile/pages/change_weight_page.dart';
+import 'package:fitnessapp/presentation/settings/pages/delete_account_page.dart';
+import 'package:fitnessapp/presentation/workouts/pages/new_exercise_page.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
 
 class Routes {
   static const String boardingRoute = '/';

@@ -1,14 +1,15 @@
+import 'package:fitnessapp/presentation/consumption/providers/consumption_provider.dart';
+import 'package:fitnessapp/presentation/home/providers/home_provider.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/consumption/providers/consumption_provider.dart';
-import 'package:Fitness/presentation/home/providers/home_provider.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
+
 
 class FitnessDataWidget extends StatelessWidget {
   const FitnessDataWidget({
@@ -115,7 +116,7 @@ class FitnessDataWidget extends StatelessWidget {
                             child: Text(
                               getMessage(bmi),
                               textAlign: TextAlign.center,
-                              style: StyleManager.fitnessBmiTextStyle,
+                              style: StyleManager.fitnessappBmiTextStyle,
                             ),
                           )
                         ],

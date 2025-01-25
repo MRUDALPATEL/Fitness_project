@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/home/providers/home_provider.dart';
-import 'package:Fitness/presentation/profile/providers/profile_provider.dart';
-import 'package:Fitness/presentation/profile/widgets/edit_text_button.dart';
-import 'package:Fitness/presentation/profile/widgets/weight_data_text_row.dart';
-import 'package:Fitness/presentation/profile/widgets/weight_line_chart.dart';
-import 'package:Fitness/utils/managers/asset_manager.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
-import 'package:Fitness/utils/router/router.dart';
+import 'package:fitnessapp/presentation/home/providers/home_provider.dart';
+import 'package:fitnessapp/presentation/profile/providers/profile_provider.dart';
+import 'package:fitnessapp/presentation/profile/widgets/edit_text_button.dart';
+import 'package:fitnessapp/presentation/profile/widgets/weight_data_text_row.dart';
+import 'package:fitnessapp/presentation/profile/widgets/weight_line_chart.dart';
+import 'package:fitnessapp/utils/managers/asset_manager.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
+import 'package:fitnessapp/utils/router/router.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

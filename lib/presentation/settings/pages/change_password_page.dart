@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:Fitness/presentation/settings/widgets/change_password_app_bar.dart';
-import 'package:Fitness/presentation/settings/providers/settings_provider.dart';
-import 'package:Fitness/utils/managers/color_manager.dart';
-import 'package:Fitness/utils/managers/string_manager.dart';
-import 'package:Fitness/utils/managers/style_manager.dart';
-import 'package:Fitness/utils/managers/value_manager.dart';
-import 'package:Fitness/utils/widgets/lime_green_rounded_button.dart';
-import 'package:Fitness/utils/widgets/text_field_underlined.dart';
+import 'package:fitnessapp/presentation/settings/widgets/change_password_app_bar.dart';
+import 'package:fitnessapp/presentation/settings/providers/settings_provider.dart';
+import 'package:fitnessapp/utils/managers/color_manager.dart';
+import 'package:fitnessapp/utils/managers/string_manager.dart';
+import 'package:fitnessapp/utils/managers/style_manager.dart';
+import 'package:fitnessapp/utils/managers/value_manager.dart';
+import 'package:fitnessapp/utils/widgets/lime_green_rounded_button.dart';
+import 'package:fitnessapp/utils/widgets/text_field_underlined.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});

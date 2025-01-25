@@ -1,0 +1,50 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Rule for users collection
+    match /users/{userId} {
+      // Allow read/write access only for the authenticated user
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    match /workouts/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      match /workoutData/{workoutId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    match /finishedWorkouts/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      match /finishedWorkoutsData/{workoutId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    match /allWorkouts/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      match /allWorkoutsData/{workoutId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+     
+      // Rule for meals-related collections
+    match /meals/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      match /mealData/{documentId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+  }
+}
+
+
+
+
+Sprinter
+Middle Distance
+Long Distance
+High jump
+Long jump

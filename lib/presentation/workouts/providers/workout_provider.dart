@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:Fitness/model/workout_model.dart';
+import 'package:fitnessapp/model/workout_model.dart';
 
 class WorkoutProvider with ChangeNotifier {
   final List<WorkoutModel> _workouts = [];
@@ -11,22 +11,23 @@ class WorkoutProvider with ChangeNotifier {
   int? exercisesLeft;
   double? shownPercent;
 
+  static const String workoutsPath = 'workouts';
+  static const String finishedWorkoutsPath = 'finishedWorkouts';
+  static const String allWorkoutsPath = 'allWorkouts';
+
+ 
   List<WorkoutModel> get workouts {
-    return [..._workouts];
-  }
+  print("Current workouts: ${_workouts.length}");
+  return [..._workouts];
+}
 
-  List<WorkoutModel> get finishedWourkouts {
-    return [..._finishedWorkouts];
-  }
-
-  List<WorkoutModel> get allWorkouts {
-    return [..._allWorkouts];
-  }
+  List<WorkoutModel> get finishedWorkouts => [..._finishedWorkouts];
+  List<WorkoutModel> get allWorkouts => [..._allWorkouts];
 
   Future<void> getProgressPercent() async {
     final int allWorkoutsNum = _allWorkouts.length;
     final int finishedWorkoutsNum = _finishedWorkouts.length;
-    progressPercent = finishedWorkoutsNum / allWorkoutsNum;
+    progressPercent = allWorkoutsNum > 0 ? finishedWorkoutsNum / allWorkoutsNum : 0;
     shownPercent = progressPercent! * 100;
     exercisesLeft = allWorkoutsNum - finishedWorkoutsNum;
   }
@@ -39,233 +40,202 @@ class WorkoutProvider with ChangeNotifier {
   }) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      String docId = FirebaseFirestore.instance.collection(workoutsPath).doc().id;
 
       await FirebaseFirestore.instance
-          .collection('workouts')
-          .doc(user!.uid)
+          .collection(workoutsPath)
+          .doc(user.uid)
           .collection('workoutData')
-          .doc()
+          .doc(docId)
           .set({
         'name': name,
         'repNumber': repNumber,
         'setNumber': setNumber,
         'dateTime': dateTime,
+        'id': docId,
       });
+
       await FirebaseFirestore.instance
-          .collection('allWorkouts')
+          .collection(allWorkoutsPath)
           .doc(user.uid)
           .collection('allWorkoutsData')
-          .doc()
+          .doc(docId)
           .set({
         'name': name,
         'repNumber': repNumber,
         'setNumber': setNumber,
         'dateTime': dateTime,
+        'id': docId,
       });
-      notifyListeners();
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future fetchAndSetWorkouts() async {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    try {
-      final workoutSnapshot = await FirebaseFirestore.instance
-          .collection('workouts')
-          .doc(user!.uid)
-          .collection('workoutData')
-          .get();
-      final allWorkoutSnapshot = await FirebaseFirestore.instance
-          .collection('allWorkouts')
-          .doc(user.uid)
-          .collection('allWorkoutsData')
-          .get();
-      final finishedworkoutSnapshot = await FirebaseFirestore.instance
-          .collection('finishedWorkouts')
-          .doc(user.uid)
-          .collection('finishedWorkoutsData')
-          .get();
-
-      final List<WorkoutModel> loadedWorkouts = [];
-      final List<WorkoutModel> allworkoutsLoaded = [];
-      final List<WorkoutModel> loadedFinishedWorkouts = [];
-
-      for (var doc in workoutSnapshot.docs) {
-        final workoutData = doc.data();
-        loadedWorkouts.add(
-          WorkoutModel(
-            id: doc.id,
-            name: workoutData['name'],
-            repNumber: workoutData['repNumber'],
-            setNumber: workoutData['setNumber'],
-            dateTime: (workoutData['dateTime'] as Timestamp).toDate(),
-          ),
-        );
-      }
-      for (var doc in allWorkoutSnapshot.docs) {
-        final allWorkoutData = doc.data();
-        allworkoutsLoaded.add(
-          WorkoutModel(
-            id: doc.id,
-            name: allWorkoutData['name'],
-            repNumber: allWorkoutData['repNumber'],
-            setNumber: allWorkoutData['setNumber'],
-            dateTime: (allWorkoutData['dateTime'] as Timestamp).toDate(),
-          ),
-        );
-      }
-
-      for (var doc in finishedworkoutSnapshot.docs) {
-        final finishedWorkoutsData = doc.data();
-        loadedFinishedWorkouts.add(
-          WorkoutModel(
-            id: doc.id,
-            name: finishedWorkoutsData['name'],
-            repNumber: finishedWorkoutsData['repNumber'],
-            setNumber: finishedWorkoutsData['setNumber'],
-            dateTime: (finishedWorkoutsData['dateTime'] as Timestamp).toDate(),
-          ),
-        );
-      }
-      loadedWorkouts.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-      _workouts.clear();
-      _workouts.addAll(loadedWorkouts);
-      _allWorkouts.clear();
-      _allWorkouts.addAll(allworkoutsLoaded);
-      _finishedWorkouts.clear();
-      _finishedWorkouts.addAll(loadedFinishedWorkouts);
 
       notifyListeners();
     } catch (e) {
       rethrow;
     }
   }
+Future<void> fetchAndSetWorkouts() async {
+  User? user = FirebaseAuth.instance.currentUser;
+
+  if (user == null) {
+    print("Error: User is not authenticated.");
+    return;
+  }
+
+  print("Fetching workouts for user: ${user.uid}");
+
+  try {
+    final workoutSnapshot = await FirebaseFirestore.instance
+        .collection('workouts')
+        .doc(user.uid)
+        .collection('workoutData')
+        .get();
+
+    if (workoutSnapshot.docs.isEmpty) {
+      print("No workouts found.");
+      _workouts.clear(); // Ensure the list is cleared if no data
+    } else {
+      print("Workouts fetched: ${workoutSnapshot.docs.length}");
+      _workouts.clear(); // Clear old data
+      _workouts.addAll(_mapSnapshotToWorkoutList(workoutSnapshot));
+    }
+
+    notifyListeners(); // Notify the UI to update
+  } catch (e) {
+    print("Error fetching workouts: $e");
+    rethrow;
+  }
+}
+
+
+
 
   Future<void> clearWorkoutsIfDayChanges(DateTime lastDateTime) async {
     DateTime now = DateTime.now();
-
-    if (isLastDateTimeDifferent(now, lastDateTime)) {
+    if (!now.isSameDay(lastDateTime)) {
       try {
         User? user = FirebaseAuth.instance.currentUser;
+        if (user == null) return;
 
-        await FirebaseFirestore.instance
-            .collection('workouts')
-            .doc(user!.uid)
-            .collection('workoutData')
-            .get()
-            .then((workoutSnapshot) {
-          for (var doc in workoutSnapshot.docs) {
-            DateTime workoutDateTime = (doc['dateTime'] as Timestamp).toDate();
-            if (isWorkoutDateDifferent(now, workoutDateTime)) {
-              doc.reference.delete();
-            }
-          }
-        });
-        await FirebaseFirestore.instance
-            .collection('finishedWorkouts')
-            .doc(user.uid)
-            .collection('finishedWorkoutsData')
-            .get()
-            .then((finishedWorkoutSnapshot) {
-          for (var doc in finishedWorkoutSnapshot.docs) {
-            DateTime workoutDateTime = (doc['dateTime'] as Timestamp).toDate();
-            if (isWorkoutDateDifferent(now, workoutDateTime)) {
-              doc.reference.delete();
-            }
-          }
-        });
-        await FirebaseFirestore.instance
-            .collection('allWorkouts')
-            .doc(user.uid)
-            .collection('allWorkoutsData')
-            .get()
-            .then((finishedWorkoutSnapshot) {
-          for (var doc in finishedWorkoutSnapshot.docs) {
-            DateTime workoutDateTime = (doc['dateTime'] as Timestamp).toDate();
-            if (isWorkoutDateDifferent(now, workoutDateTime)) {
-              doc.reference.delete();
-            }
-          }
-        });
+        for (String collection in [workoutsPath, finishedWorkoutsPath, allWorkoutsPath]) {
+          await _clearOldWorkouts(collection, user.uid, now);
+        }
       } catch (e) {
         rethrow;
+      } finally {
+        notifyListeners();
       }
     }
   }
 
-  bool isLastDateTimeDifferent(DateTime now, DateTime lastDateTime) {
-    return now.year != lastDateTime.year ||
-        now.month != lastDateTime.month ||
-        now.day != lastDateTime.day;
-  }
+  
 
-  bool isWorkoutDateDifferent(DateTime now, DateTime workoutDateTime) {
-    return now.year != workoutDateTime.year ||
-        now.month != workoutDateTime.month ||
-        now.day != workoutDateTime.day;
+  
+  List<WorkoutModel> _mapSnapshotToWorkoutList(QuerySnapshot snapshot) {
+  return snapshot.docs.map((doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return WorkoutModel(
+      id: data['id'] ?? '',
+      name: data['name'] ?? 'Unnamed',
+      repNumber: data['repNumber'] ?? 0,
+      setNumber: data['setNumber'] ?? 0,
+      dateTime: (data['dateTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    );
+  }).toList()
+    ..sort((a, b) => b.dateTime.compareTo(a.dateTime));
+}
+
+
+  Future<void> _clearOldWorkouts(String collection, String userId, DateTime now) async {
+    await FirebaseFirestore.instance
+        .collection(collection)
+        .doc(userId)
+        .collection('${collection}Data')
+        .where('dateTime', isLessThan: Timestamp.fromDate(now))
+        .get()
+        .then((snapshot) {
+      for (var doc in snapshot.docs) {
+        doc.reference.delete();
+      }
+    });
   }
 
   Future<void> deleteWorkout({required String workoutID}) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-
-      await FirebaseFirestore.instance
-          .collection('workouts')
-          .doc(user!.uid)
-          .collection('workoutData')
-          .doc(workoutID)
-          .delete();
-      notifyListeners();
-    } catch (e) {
-      rethrow;
+  try {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception("User is not authenticated.");
     }
+
+    // Delete workout from the 'workouts' collection
+    await FirebaseFirestore.instance
+        .collection(workoutsPath)
+        .doc(user.uid)
+        .collection('workoutData')
+        .doc(workoutID)
+        .delete();
+
+    // Remove the workout locally from the _workouts list
+    _workouts.removeWhere((workout) => workout.id == workoutID);
+
+    notifyListeners(); // Notify the UI to refresh
+  } catch (e) {
+    print("Error deleting workout: $e");
+    rethrow;
   }
+}
 
-  Future<void> deleteAllWorkout({required String allWorkoutID}) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-
-      await FirebaseFirestore.instance
-          .collection('allWorkouts')
-          .doc(user!.uid)
-          .collection('allWorkoutsData')
-          .doc(allWorkoutID)
-          .delete();
-
-      notifyListeners();
-    } catch (e) {
-      rethrow;
+Future<void> finishWorkout({
+  required String workoutID,
+  required String name,
+  required int repNumber,
+  required int setNumber,
+  required DateTime dateTime,
+}) async {
+  try {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception("User is not authenticated.");
     }
+
+    // Add the workout to the 'finishedWorkouts' collection
+    await FirebaseFirestore.instance
+        .collection(finishedWorkoutsPath)
+        .doc(user.uid)
+        .collection('finishedWorkoutsData')
+        .doc(workoutID)
+        .set({
+      'name': name,
+      'repNumber': repNumber,
+      'setNumber': setNumber,
+      'dateTime': dateTime,
+      'id': workoutID,
+    });
+
+    // Remove the workout from the 'workouts' collection
+    await deleteWorkout(workoutID: workoutID);
+
+    // Add the workout locally to the _finishedWorkouts list
+    _finishedWorkouts.add(WorkoutModel(
+      id: workoutID,
+      name: name,
+      repNumber: repNumber,
+      setNumber: setNumber,
+      dateTime: dateTime,
+    ));
+
+    notifyListeners(); // Notify the UI to refresh
+  } catch (e) {
+    print("Error finishing workout: $e");
+    rethrow;
   }
+}
 
-  Future<void> finishWorkout({
-    required String workoutID,
-    required String name,
-    required int repNumber,
-    required int setNumber,
-    required DateTime dateTime,
-  }) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
+}
 
-      await FirebaseFirestore.instance
-          .collection('finishedWorkouts')
-          .doc(user!.uid)
-          .collection('finishedWorkoutsData')
-          .doc()
-          .set({
-        'name': name,
-        'repNumber': repNumber,
-        'setNumber': setNumber,
-        'dateTime': dateTime,
-        'id': workoutID,
-      });
-      notifyListeners();
-    } catch (e) {
-      notifyListeners();
-      rethrow;
-    }
+extension DateTimeComparison on DateTime {
+  bool isSameDay(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
   }
 }

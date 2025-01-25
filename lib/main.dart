@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:Fitness/utils/notifications/notification_manager.dart';
+import 'package:fitnessapp/utils/notifications/notification_manager.dart';
 
 import 'app/app.dart';
 
