@@ -23,26 +23,24 @@ class EditTextButton extends StatelessWidget {
         alignment: Alignment.centerRight,
         child: GestureDetector(
           onTap: onTap,
-          child: Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  StringsManager.edit,
-                  textAlign: TextAlign.right,
-                  style: StyleManager.editTextButtonTextStyle,
-                ),
-                SizedBox(
-                  width: SizeManager.s3.w,
-                ),
-                const Icon(
-                  Icons.edit,
-                  color: ColorManager.white,
-                  size: SizeManager.s18,
-                ),
-              ],
-            ),
+          child: Row( // Removed the Flexible widget
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                StringsManager.edit,
+                textAlign: TextAlign.right,
+                style: StyleManager.editTextButtonTextStyle,
+              ),
+              SizedBox(
+                width: SizeManager.s3.w,
+              ),
+              const Icon(
+                Icons.edit,
+                color: ColorManager.white,
+                size: SizeManager.s18,
+              ),
+            ],
           ),
         ),
       ),

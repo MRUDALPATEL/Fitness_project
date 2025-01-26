@@ -27,6 +27,7 @@ class HomeProvider with ChangeNotifier {
         _userData['activity'] = userDataSnapshot.get('activity');
         _userData['bmr'] = userDataSnapshot.get('bmr');
         _userData['goal'] = userDataSnapshot.get('goal');
+        _userData['category'] = userDataSnapshot.get('category');
         _userData['bmi'] = userDataSnapshot.get('bmi');
         _userData['email'] = userDataSnapshot.get('email');
         _userData['chest'] = userDataSnapshot.get('chest');
@@ -54,7 +55,8 @@ class HomeProvider with ChangeNotifier {
     required double height,
     required int age,
     required String activity,
-    required String goal,
+    required String goal, 
+    
   }) async {
     const double low = 1.2;
     const double light = 1.375;

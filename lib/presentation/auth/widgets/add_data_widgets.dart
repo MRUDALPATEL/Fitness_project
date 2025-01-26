@@ -23,6 +23,8 @@ class AddDataWidgets extends StatelessWidget {
     required this.surnameController,
     required this.onChangedGoal,
     required this.valueGoal,
+    required this.onChangedCategory,
+    required this.valueCategory,
   }) : super(key: key);
 
   final TextEditingController ageController;
@@ -37,6 +39,8 @@ class AddDataWidgets extends StatelessWidget {
   void Function(Object?)? onChangedActivity;
   Object? valueGoal;
   void Function(Object?)? onChangedGoal;
+  Object? valueCategory;
+  void Function(Object?)? onChangedCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -281,6 +285,87 @@ class AddDataWidgets extends StatelessWidget {
                   value: StringsManager.gain,
                   child: Text(
                     StringsManager.gainWeightHint,
+                    style: StyleManager.registerTextfieldTextStyle,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      // New Dropdown Widget
+      Padding(
+        padding: const EdgeInsets.only(
+          left: PaddingManager.p28,
+          right: PaddingManager.p28,
+          bottom: PaddingManager.p12,
+        ),
+        child: Container(
+          width: SizeManager.s400.w,
+          height: SizeManager.s50.h,
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: ColorManager.limerGreen2,
+                width: SizeManager.s0_7.h,
+              ),
+            ),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton2(
+              dropdownDecoration: BoxDecoration(
+                color: ColorManager.darkGrey,
+                borderRadius: BorderRadius.circular(
+                  RadiusManager.r15.r,
+                ),
+              ),
+              onChanged: onChangedCategory, // Pass the function here
+              value: valueCategory, // Pass the current value here
+              iconSize: SizeManager.s0, // Set your default value here
+              hint: Text(
+                'Athlete Categort', // Change this to the label for the new dropdown
+                style: StyleManager.registerTextfieldTextStyle,
+              ),
+              items: [
+                DropdownMenuItem(
+                  value: 'Sprinter',
+                  child: Text(
+                    'Sprinter',
+                    style: StyleManager.registerTextfieldTextStyle,
+                  ),
+                ),
+                DropdownMenuItem(
+                  value: 'Middle Distance',
+                  child: Text(
+                    'Middle Distance',
+                    style: StyleManager.registerTextfieldTextStyle,
+                  ),
+                ),
+                DropdownMenuItem(
+                  value: 'Long Distance',
+                  child: Text(
+                    'Long Distance',
+                    style: StyleManager.registerTextfieldTextStyle,
+                  ),
+                ),
+                DropdownMenuItem(
+                  value: 'Long Distance',
+                  child: Text(
+                    'Long Distance',
+                    style: StyleManager.registerTextfieldTextStyle,
+                  ),
+                ),
+                DropdownMenuItem(
+                  value: 'High jump',
+                  child: Text(
+                    'High jump',
+                    style: StyleManager.registerTextfieldTextStyle,
+                  ),
+                ),
+                DropdownMenuItem(
+                  value: 'Long jump',
+                  child: Text(
+                    'Long jump',
                     style: StyleManager.registerTextfieldTextStyle,
                   ),
                 ),

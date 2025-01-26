@@ -273,84 +273,81 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> addUserData({
-    required String email,
-    required String name,
-    required String surname,
-    required int age,
-    required double height,
-    required double weight,
-    required String gender,
-    required String activity,
-    required double bmr,
-    required String goal,
-    required double bmi,
-    required BuildContext context,
-  }) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        throw Exception("No user is currently signed in.");
-      }
-
-      final docRef =
-          FirebaseFirestore.instance.collection('users').doc(user.uid);
-
-      // Check if the document exists
-      final docSnapshot = await docRef.get();
-      if (docSnapshot.exists) {
-        // Update existing document
-        await docRef.update({
-          'email': email,
-          'first name': name,
-          'surname': surname,
-          'age': age,
-          'height': height,
-          'weight': weight,
-          'gender': gender,
-          'activity': activity,
-          'bmr': bmr,
-          'goal': goal,
-          'bmi': bmi,
-          'chest': 0.0,
-          'shoulders': 0.0,
-          'biceps': 0.0,
-          'foreArm': 0.0,
-          'waist': 0.0,
-          'hips': 0.0,
-          'thigh': 0.0,
-          'calf': 0.0,
-        });
-      } else {
-        // Create a new document if it doesn't exist
-        await docRef.set({
-          'email': email,
-          'first name': name,
-          'surname': surname,
-          'age': age,
-          'height': height,
-          'weight': weight,
-          'gender': gender,
-          'activity': activity,
-          'bmr': bmr,
-          'goal': goal,
-          'bmi': bmi,
-          'chest': 0.0,
-          'shoulders': 0.0,
-          'biceps': 0.0,
-          'foreArm': 0.0,
-          'waist': 0.0,
-          'hips': 0.0,
-          'thigh': 0.0,
-          'calf': 0.0,
-        });
-      }
-
-      notifyListeners();
-    } catch (e) {
-      debugPrint("Error in addUserData: $e");
-      rethrow;
+  required String email,
+  required String name,
+  required String surname,
+  required int age,
+  required double height,
+  required double weight,
+  required String gender,
+  required String activity,
+  required double bmr,
+  required String goal,
+  required double bmi,
+  required String category, // New dropdown value
+  required BuildContext context,
+}) async {
+  try {
+    // Get the currently signed-in user
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception("No user is currently signed in.");
     }
+
+    final docRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+    // Common data to store in Firestore
+    final userData = {
+      'email': email,
+      'first name': name,
+      'surname': surname,
+      'age': age,
+      'height': height,
+      'weight': weight,
+      'gender': gender,
+      'activity': activity,
+      'bmr': bmr,
+      'goal': goal,
+      'bmi': bmi,
+      'category': category, // Added new dropdown value
+      // Measurements (can be customized or expanded later)
+      'chest': 0.0,
+      'shoulders': 0.0,
+      'biceps': 0.0,
+      'foreArm': 0.0,
+      'waist': 0.0,
+      'hips': 0.0,
+      'thigh': 0.0,
+      'calf': 0.0,
+    };
+
+    // Check if the document exists
+    final docSnapshot = await docRef.get();
+
+    if (docSnapshot.exists) {
+      // Update existing document
+      await docRef.update(userData);
+    } else {
+      // Create a new document if it doesn't exist
+      await docRef.set(userData);
+    }
+
+    debugPrint("User data added/updated successfully.");
+  } on FirebaseException catch (e) {
+    debugPrint("FirebaseException in addUserData: ${e.message}");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Failed to save data: ${e.message}")),
+    );
+    rethrow;
+  } catch (e) {
+    debugPrint("Unexpected error in addUserData: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("An unexpected error occurred.")),
+    );
+    rethrow;
   }
+}
+
 
   Future<void> signInWithGoogle(BuildContext context) async {
     try {

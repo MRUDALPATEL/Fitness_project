@@ -83,8 +83,6 @@ Future<void> fetchAndSetWorkouts() async {
     return;
   }
 
-  print("Fetching workouts for user: ${user.uid}");
-
   try {
     final workoutSnapshot = await FirebaseFirestore.instance
         .collection('workouts')

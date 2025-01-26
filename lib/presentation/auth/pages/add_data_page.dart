@@ -27,6 +27,8 @@ class _AddDataPageState extends State<AddDataPage> {
   String? _valueGender;
   String? _valueActivity;
   String? _valueGoal;
+  String? _valueCategory;
+
   void _onChangedGender(Object? selectedGenderValue) {
     if (selectedGenderValue is String) {
       setState(() {
@@ -50,6 +52,14 @@ class _AddDataPageState extends State<AddDataPage> {
       });
     }
   }
+  void _onChangedCategory(Object? selectedCategoryValue) {
+    if (selectedCategoryValue is String) {
+      setState(() {
+        _valueCategory = selectedCategoryValue;
+      });
+    }
+  }
+
 
   @override
   void dispose() {
@@ -76,6 +86,7 @@ class _AddDataPageState extends State<AddDataPage> {
               age: int.parse(_ageController.text),
               activity: _valueActivity!,
               goal: _valueGoal!,
+              
             )
             .then((_) => homeProvider.getUsersBMI(
                   height: double.parse(_heightController.text),
@@ -95,6 +106,7 @@ class _AddDataPageState extends State<AddDataPage> {
                 bmr: homeProvider.userBMRwithGoal,
                 goal: _valueGoal!,
                 bmi: homeProvider.usersBMI,
+                category: _valueCategory!,
               ),
             );
       } catch (e) {
@@ -135,7 +147,9 @@ class _AddDataPageState extends State<AddDataPage> {
                 nameController: _nameController,
                 surnameController: _surnameController,
                 valueGoal: _valueGoal,
-                onChangedGoal: _onChangedGoal,
+                onChangedGoal: _onChangedGoal, 
+                onChangedCategory: _onChangedCategory, 
+                valueCategory: _valueCategory,
               ),
               LimeGreenRoundedButtonWidget(
                 onTap: () {
