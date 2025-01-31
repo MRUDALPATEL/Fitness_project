@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:fitnessapp/presentation/auth/providers/auth_provider.dart';
 import 'package:fitnessapp/presentation/auth/widgets/login_or_register_view.dart';
 import 'package:fitnessapp/utils/managers/asset_manager.dart';
@@ -26,7 +25,6 @@ class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final TextEditingController _repeatPasswordController =
       TextEditingController();
   AuthMode _authMode = AuthMode.signIn;

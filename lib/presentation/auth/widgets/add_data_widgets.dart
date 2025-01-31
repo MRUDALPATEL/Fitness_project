@@ -348,13 +348,7 @@ class AddDataWidgets extends StatelessWidget {
                     style: StyleManager.registerTextfieldTextStyle,
                   ),
                 ),
-                DropdownMenuItem(
-                  value: 'Long Distance',
-                  child: Text(
-                    'Long Distance',
-                    style: StyleManager.registerTextfieldTextStyle,
-                  ),
-                ),
+                
                 DropdownMenuItem(
                   value: 'High jump',
                   child: Text(

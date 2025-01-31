@@ -44,7 +44,7 @@ class _NewMealPageState extends State<NewMealPage> {
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
-
+    
     final consumptionProvider =
         Provider.of<ConsumptionProvider>(context, listen: false);
 

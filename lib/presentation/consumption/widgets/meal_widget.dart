@@ -32,7 +32,7 @@ class MealWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
-
+    
     return Padding(
       padding: const EdgeInsets.only(
         top: PaddingManager.p8,
