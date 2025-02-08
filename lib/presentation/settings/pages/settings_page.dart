@@ -73,14 +73,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-           /*  SettingsPageButton(
+             SettingsPageButton(
               deviceWidth: deviceWidth,
-              onTap: () {
-                //TODO:
-              },
-              iconData: Icons.nightlight_outlined,
-              title: StringsManager.theme,
-            ), */
+              onTap: () =>
+                Navigator.of(context).pushNamed(Routes.SmartwatchSettingsPage),
+              
+              iconData: Icons.watch,
+              title: "watch",
+            ),
             /* SettingsPageButton(
               deviceWidth: deviceWidth,
               onTap: () {

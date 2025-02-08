@@ -88,7 +88,7 @@ class _BoardingPageState extends State<BoardingPage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: SizeManager.s400.h,
+              height: MediaQuery.of(context).size.height * 0.5,
               width: double.infinity,
               decoration: BoxDecoration(
                   color: ColorManager.black87,
@@ -100,63 +100,65 @@ class _BoardingPageState extends State<BoardingPage> {
                       RadiusManager.r15.r,
                     ),
                   )),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: PaddingManager.p28),
-                    child: SmoothPageIndicator(
-                      controller: _pageController,
-                      count: imgList.length,
-                      effect: CustomizableEffect(
-                        spacing: SizeManager.s16,
-                        dotDecoration: DotDecoration(
-                          width: SizeManager.s8.w,
-                          height: SizeManager.s8.h,
-                          color: ColorManager.white,
-                          borderRadius: BorderRadius.circular(
-                            RadiusManager.r24.r,
-                          ),
-                          dotBorder: DotBorder(
-                            width: SizeManager.s1_5.w,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: PaddingManager.p28),
+                      child: SmoothPageIndicator(
+                        controller: _pageController,
+                        count: imgList.length,
+                        effect: CustomizableEffect(
+                          spacing: SizeManager.s16,
+                          dotDecoration: DotDecoration(
+                            width: SizeManager.s8.w,
+                            height: SizeManager.s8.h,
                             color: ColorManager.white,
+                            borderRadius: BorderRadius.circular(
+                              RadiusManager.r24.r,
+                            ),
+                            dotBorder: DotBorder(
+                              width: SizeManager.s1_5.w,
+                              color: ColorManager.white,
+                            ),
                           ),
-                        ),
-                        activeDotDecoration: DotDecoration(
-                          width: SizeManager.s20.w,
-                          height: SizeManager.s20.h,
-                          borderRadius: BorderRadius.circular(
-                            RadiusManager.r24.r,
-                          ),
-                          color: ColorManager.black87,
-                          dotBorder: DotBorder(
-                            width: SizeManager.s1_5.w,
-                            color: ColorManager.white,
+                          activeDotDecoration: DotDecoration(
+                            width: SizeManager.s20.w,
+                            height: SizeManager.s20.h,
+                            borderRadius: BorderRadius.circular(
+                              RadiusManager.r24.r,
+                            ),
+                            color: ColorManager.black87,
+                            dotBorder: DotBorder(
+                              width: SizeManager.s1_5.w,
+                              color: ColorManager.white,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: PaddingManager.p28),
-                    child: Text(
-                      StringsManager.splashText1,
-                      style: StyleManager.splashText1TextStyle,
-                      textAlign: TextAlign.center,
+                    Padding(
+                      padding: const EdgeInsets.only(top: PaddingManager.p28),
+                      child: Text(
+                        StringsManager.splashText1,
+                        style: StyleManager.splashText1TextStyle,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: PaddingManager.p28),
-                    child: Text(
-                      StringsManager.splashText2,
-                      style: StyleManager.splashText2TextStyle,
-                      textAlign: TextAlign.center,
+                    Padding(
+                      padding: const EdgeInsets.only(top: PaddingManager.p16),
+                      child: Text(
+                        StringsManager.splashText2,
+                        style: StyleManager.splashText2TextStyle,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                  const SliderBoardingWidget()
-                ],
-              ).animate().fadeIn(duration: 500.ms),
+                    const SliderBoardingWidget()
+                  ],
+                ).animate().fadeIn(duration: 500.ms),
+              ),
             ),
           ),
         ],

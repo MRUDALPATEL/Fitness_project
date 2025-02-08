@@ -5,7 +5,9 @@ import 'package:fitnessapp/utils/notifications/notification_manager.dart';
 import 'app/app.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
   NotificationManager notificationManager = NotificationManager();
   await notificationManager.init();

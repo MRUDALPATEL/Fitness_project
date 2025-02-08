@@ -25,7 +25,7 @@ class ConsumptionPageAppBarWidget extends StatelessWidget {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: PaddingManager.p12),
+          padding: const EdgeInsets.only(right: PaddingManager.p8),
           child: Container(
             height: SizeManager.s40.h,
             width: SizeManager.s40.w,

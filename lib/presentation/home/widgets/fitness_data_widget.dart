@@ -10,11 +10,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
-
 class FitnessDataWidget extends StatelessWidget {
-  const FitnessDataWidget({
-    super.key,
-  });
+  const FitnessDataWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +30,11 @@ class FitnessDataWidget extends StatelessWidget {
             } else {
               double bmr = homeProvider.userData['bmr'];
               double bmi = homeProvider.userData['bmi'];
+
               Color getProgressColor(double bmi) {
-                var isNormalBMI = bmi >= 18.5 && bmi <= 25;
-                var isUnderOrOverWeight =
-                    (bmi >= 17 && bmi < 18.5) || (bmi > 25 && bmi <= 30);
-                if (isNormalBMI) {
+                if (bmi >= 18.5 && bmi <= 25) {
                   return ColorManager.limerGreen2;
-                } else if (isUnderOrOverWeight) {
+                } else if ((bmi >= 17 && bmi < 18.5) || (bmi > 25 && bmi <= 30)) {
                   return ColorManager.yellow;
                 } else {
                   return ColorManager.red;
@@ -47,14 +42,11 @@ class FitnessDataWidget extends StatelessWidget {
               }
 
               String getMessage(double bmi) {
-                var isNormalBMI = bmi >= 18.5 && bmi <= 25;
-                var isUnderWeight = bmi >= 17 && bmi < 18.5;
-                var isOverWeight = bmi > 25 && bmi <= 30;
-                if (isNormalBMI) {
+                if (bmi >= 18.5 && bmi <= 25) {
                   return StringsManager.normalBmi;
-                } else if (isUnderWeight) {
+                } else if (bmi >= 17 && bmi < 18.5) {
                   return StringsManager.underWeightBmi;
-                } else if (isOverWeight) {
+                } else if (bmi > 25 && bmi <= 30) {
                   return StringsManager.overWeightBmi;
                 } else {
                   return StringsManager.dangerousBmi;
@@ -62,35 +54,27 @@ class FitnessDataWidget extends StatelessWidget {
               }
 
               return Padding(
-                padding: EdgeInsets.only(
-                  left: PaddingManager.p12.w,
-                  right: PaddingManager.p12.w,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: PaddingManager.p12.w),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: (deviceWidth / 3 - 16).w,
-                      height: SizeManager.s212.h,
-                      decoration: BoxDecoration(
-                        color: ColorManager.black87,
-                        borderRadius:
-                            BorderRadius.circular(RadiusManager.r15.r),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: PaddingManager.p12.h,
-                              bottom: PaddingManager.p12.h,
-                            ),
-                            child: CircularPercentIndicator(
+                    /// **BMI Box**
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        height: 210.h,
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        decoration: BoxDecoration(
+                          color: ColorManager.black87,
+                          borderRadius: BorderRadius.circular(RadiusManager.r15.r),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularPercentIndicator(
                               circularStrokeCap: CircularStrokeCap.round,
-                              radius: RadiusManager.r40.r,
-                              lineWidth: SizeManager.s8.w,
+                              radius: 40.r,
+                              lineWidth: 8.w,
                               percent: bmi / 40,
                               progressColor: getProgressColor(bmi),
                               backgroundColor: ColorManager.grey3,
@@ -99,48 +83,42 @@ class FitnessDataWidget extends StatelessWidget {
                               center: Icon(
                                 Icons.favorite_border,
                                 color: getProgressColor(bmi),
-                                size: SizeManager.s28,
+                                size: 28,
                               ),
                             ),
-                          ),
-                          Text(
-                            'BMI ${bmi.toStringAsFixed(1)}',
-                            textAlign: TextAlign.center,
-                            style: StyleManager.homePageS20BoldWhite,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              top: PaddingManager.p12.h,
-                              bottom: PaddingManager.p12.h,
+                            SizedBox(height: 10.h),
+                            Text(
+                              'BMI ${bmi.toStringAsFixed(1)}',
+                              style: StyleManager.homePageS20BoldWhite,
                             ),
-                            child: Text(
+                            SizedBox(height: 5.h),
+                            Text(
                               getMessage(bmi),
-                              textAlign: TextAlign.center,
                               style: StyleManager.fitnessappBmiTextStyle,
+                              textAlign: TextAlign.center,
                             ),
-                          )
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                    Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: PaddingManager.p12.w,
-                            bottom: PaddingManager.p12.h,
-                          ),
-                          child: Container(
-                            height: SizeManager.s100.h,
-                            width: (deviceWidth * (2 / 3) - 20).w,
+
+                    SizedBox(width: 12.w),
+
+                    /// **BMR & Water/Calorie Boxes**
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        children: [
+                          /// **BMR Box**
+                          Container(
+                            height: 95.h,
+                            width: double.infinity,
                             decoration: BoxDecoration(
                               color: ColorManager.limerGreen2,
-                              borderRadius: BorderRadius.circular(
-                                RadiusManager.r15.r,
-                              ),
+                              borderRadius: BorderRadius.circular(RadiusManager.r15.r),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
                                   StringsManager.kcalConsumption,
@@ -152,173 +130,87 @@ class FitnessDataWidget extends StatelessWidget {
                                 ),
                                 Text(
                                   StringsManager.kcalPerDay,
-                                  style:
-                                      StyleManager.homePageS16RegularDarkGrey,
+                                  style: StyleManager.homePageS16RegularDarkGrey,
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: PaddingManager.p12.w,
-                                right: PaddingManager.p12.w,
-                              ),
-                              child: Container(
-                                width: (deviceWidth / 3 - 16).w,
-                                height: SizeManager.s100.h,
-                                decoration: BoxDecoration(
+                          SizedBox(height: 12.h),
+
+                          /// **Water & Calories Row**
+                          Row(
+                            children: [
+                              /// **Water Box**
+                              Expanded(
+                                child: _buildDataBox(
+                                  title: StringsManager.water,
+                                  value: "${consumptionProvider.waterADay.toStringAsFixed(1)} ${StringsManager.liters}",
+                                  icon: Icons.water_drop_outlined,
                                   color: ColorManager.black87,
-                                  borderRadius: BorderRadius.circular(
-                                      RadiusManager.r15.r),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: PaddingManager.p12.w,
-                                        right: PaddingManager.p12.w,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            StringsManager.water,
-                                            style: StyleManager
-                                                .homePageS17BoldWhite,
-                                          ),
-                                          Icon(
-                                            Icons.water_drop_outlined,
-                                            size: SizeManager.s28,
-                                            color: ColorManager.limerGreen2,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: PaddingManager.p12.w,
-                                        right: PaddingManager.p12.w,
-                                        top: PaddingManager.p12.h,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            consumptionProvider.waterADay
-                                                .toStringAsFixed(1),
-                                            overflow: TextOverflow.clip,
-                                            style: StyleManager
-                                                .homePageS20BoldWhite,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              left: PaddingManager.p12.w,
-                                            ),
-                                            child: Text(
-                                              StringsManager.liters,
-                                              overflow: TextOverflow.clip,
-                                              softWrap: true,
-                                              style: StyleManager
-                                                  .homePageS12RegularWhite2,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
+                                  iconColor: ColorManager.limerGreen2,
                                 ),
                               ),
-                            ),
-                            Container(
-                              width: (deviceWidth / 3 - 16).w,
-                              height: SizeManager.s100.h,
-                              decoration: BoxDecoration(
-                                color: ColorManager.black87,
-                                borderRadius:
-                                    BorderRadius.circular(RadiusManager.r15.r),
+                              SizedBox(width: 12.w),
+
+                              /// **Calories Box**
+                              Expanded(
+                                child: _buildDataBox(
+                                  title: StringsManager.calories,
+                                  value: "${consumptionProvider.kCalaDay.toStringAsFixed(0)} ${StringsManager.kcal}",
+                                  icon: Icons.local_pizza_outlined,
+                                  color: ColorManager.black87,
+                                  iconColor: ColorManager.limerGreen2,
+                                ),
                               ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: PaddingManager.p12.w,
-                                      right: PaddingManager.p12.w,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          StringsManager.calories,
-                                          style:
-                                              StyleManager.homePageS17BoldWhite,
-                                        ),
-                                        Icon(
-                                          Icons.local_pizza_outlined,
-                                          size: SizeManager.s28,
-                                          color: ColorManager.limerGreen2,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: PaddingManager.p12.w,
-                                      right: PaddingManager.p12.w,
-                                      top: PaddingManager.p12.h,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          consumptionProvider.kCalaDay
-                                              .toStringAsFixed(0),
-                                          style:
-                                              StyleManager.homePageS20BoldWhite,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            left: PaddingManager.p12.w,
-                                          ),
-                                          child: Text(
-                                            StringsManager.kcal,
-                                            style: StyleManager
-                                                .homePageS12RegularWhite2,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               );
             }
           }),
+    );
+  }
+
+  /// **Reusable Box Widget**
+  Widget _buildDataBox({
+    required String title,
+    required String value,
+    required IconData icon,
+    required Color color,
+    required Color iconColor,
+  }) {
+    return Container(
+      height: 90.h,
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(RadiusManager.r15.r),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: StyleManager.homePageS17BoldWhite,
+              ),
+              Icon(icon, size: 28, color: iconColor),
+            ],
+          ),
+          SizedBox(height: 5.h),
+          Text(
+            value,
+            style: StyleManager.homePageS20BoldWhite,
+          ),
+        ],
+      ),
     );
   }
 }

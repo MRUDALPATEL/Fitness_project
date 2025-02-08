@@ -1,3 +1,6 @@
+
+
+import 'package:fitnessapp/presentation/settings/widgets/smartwatchsettingpage.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnessapp/presentation/auth/pages/add_data_page.dart';
 import 'package:fitnessapp/presentation/auth/pages/auth_page.dart';
@@ -17,6 +20,7 @@ import 'package:fitnessapp/presentation/settings/pages/delete_account_page.dart'
 import 'package:fitnessapp/presentation/workouts/pages/new_exercise_page.dart';
 import 'package:fitnessapp/utils/managers/string_manager.dart';
 
+
 class Routes {
   static const String boardingRoute = '/';
   static const String mainRoute = '/main';
@@ -34,6 +38,7 @@ class Routes {
   static const String changeWeightRoute = '/changeWeight';
   static const String changeMeasurementsRoute = '/changeMeasurements';
   static const String setGoalRoute = '/setGoal';
+  static const String SmartwatchSettingsPage = '/smartwatchsettingpage';
 }
 
 class RouteGenerator {
@@ -55,6 +60,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const ChangePasswordPage());
       case Routes.changeEmailRoute:
         return MaterialPageRoute(builder: (_) => const ChangeEmailPage());
+      case Routes.SmartwatchSettingsPage:
+        return MaterialPageRoute(builder: (_) => const SmartwatchSettingsPage());
       case Routes.deleteAccRoute:
         return MaterialPageRoute(builder: (_) => const DeleteAccountPage());
       case Routes.newMealRoute:

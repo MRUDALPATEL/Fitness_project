@@ -70,17 +70,25 @@ class _ProfilePageState extends State<ProfilePage> {
                               right: PaddingManager.p28,
                             ),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
                                   StringsManager.loggedInAs,
                                   style: StyleManager.profieloggedinTextStyle,
                                 ),
-                                Text(
-                                  emailData,
-                                  style: StyleManager.profileLoginDataTextStyle,
-                                )
+                                SizedBox(width: 5), // Add spacing between texts
+                                Flexible(
+                                  child: Text(
+                                    emailData,
+                                    style:
+                                        StyleManager.profileLoginDataTextStyle,
+                                    overflow: TextOverflow
+                                        .ellipsis, // Truncate long emails
+                                    maxLines: 1, // Keep it in a single line
+                                    softWrap: false, // Prevent wrapping
+                                  ),
+                                ),
                               ],
                             ),
                           ),

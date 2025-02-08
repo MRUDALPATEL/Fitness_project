@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 
 class HomeProvider with ChangeNotifier {
@@ -8,6 +9,16 @@ class HomeProvider with ChangeNotifier {
   double basicBMR = 0.0;
   double userBMRwithGoal = 0.0;
   double usersBMI = 0.0;
+
+  
+
+  int steps = 0;
+  double heartRate = 0.0;
+  int caloriesBurned = 0;
+
+
+  
+
 
   Future<Map<String, dynamic>> fetchUserData() async {
     try {
@@ -122,4 +133,7 @@ class HomeProvider with ChangeNotifier {
     usersBMI = (weight / (heightInMeters * heightInMeters));
     return usersBMI;
   }
+
+  
+
 }

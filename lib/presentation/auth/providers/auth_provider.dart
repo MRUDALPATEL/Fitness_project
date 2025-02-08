@@ -378,7 +378,7 @@ class AuthProvider with ChangeNotifier {
             'name': googleUser.displayName,
             'email': googleUser.email,
           });
-          Navigator.pushReplacementNamed(context, '/addUserData');
+          Navigator.pushReplacementNamed(context, '/addData');
         } else {
           Navigator.pushReplacementNamed(context, '/main');
         }
