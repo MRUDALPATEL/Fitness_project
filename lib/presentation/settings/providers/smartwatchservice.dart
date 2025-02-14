@@ -13,19 +13,47 @@ class SmartwatchService {
   BluetoothDevice? get connectedDevice => _connectedDevice;
 
   Future<void> connectToDevice(BluetoothDevice device) async {
-    try {
-      if (_connectedDevice != null) {
-        await _connectedDevice!.disconnect();
-      }
-      await device.connect(timeout: const Duration(seconds: 10));
-      _connectedDevice = device;
-      _services = await device.discoverServices();
-      _subscribeToHeartRate();
-      _subscribeToStepsAndCalories();
-    } catch (e) {
-      debugPrint("Connection error: $e");
+  try {
+    // Ensure Bluetooth is ON
+   if (await FlutterBluePlus.adapterState.first != BluetoothAdapterState.on) {
+  debugPrint("❌ Bluetooth is OFF. Please turn it ON.");
+  return;
+}
+
+
+    // If a device is already connected, disconnect it first
+    if (_connectedDevice != null) {
+      debugPrint("🔄 Disconnecting from previous device...");
+      await _connectedDevice!.disconnect();
+      await Future.delayed(const Duration(seconds: 2)); // Ensure clean disconnection
     }
+
+    debugPrint("🔍 Connecting to ${device.platformName}...");
+
+    // Attempt connection with retry logic
+    for (int attempt = 1; attempt <= 2; attempt++) {
+      try {
+        await device.connect(timeout: const Duration(seconds: 15));
+        _connectedDevice = device;
+        _services = await device.discoverServices();
+        _subscribeToHeartRate();
+        _subscribeToStepsAndCalories();
+        debugPrint("✅ Successfully connected to ${device.platformName}");
+        return; // Exit loop if successful
+      } catch (e) {
+        debugPrint("⚠️ Attempt $attempt: Connection failed: $e");
+        if (attempt == 2) {
+          debugPrint("❌ Connection completely failed after retries.");
+        } else {
+          await Future.delayed(const Duration(seconds: 3)); // Wait before retrying
+        }
+      }
+    }
+  } catch (e) {
+    debugPrint("❌ Connection error: $e");
   }
+}
+
 
   Future<void> _subscribeToCharacteristic(
       String serviceUuid, String characteristicUuid, Function(List<int>) onData) async {

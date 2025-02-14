@@ -111,7 +111,7 @@ class FitnessDataWidget extends StatelessWidget {
                         children: [
                           /// **BMR Box**
                           Container(
-                            height: 95.h,
+                            height: 100.h,
                             width: double.infinity,
                             decoration: BoxDecoration(
                               color: ColorManager.limerGreen2,

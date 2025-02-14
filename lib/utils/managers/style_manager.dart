@@ -35,6 +35,7 @@ class StyleManager {
     letterSpacing: SizeManager.s0_7,
   );
   static final abTitleTextStyle = TextStyle(
+    color: ColorManager.white,
     fontSize: FontSize.s25.sp,
     fontWeight: FontWightManager.semiBold,
     letterSpacing: SizeManager.s3,

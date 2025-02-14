@@ -60,7 +60,8 @@ class _DrinkPageState extends State<DrinkPage> {
       appBar: AppBar(
         title: Text(
           StringsManager.drinkPageHeadLine,
-          style: StyleManager.abTitleTextStyle,
+          
+          style: TextStyle(color: Colors.white),
         ),
         elevation: 0.0,
         backgroundColor: ColorManager.darkGrey,

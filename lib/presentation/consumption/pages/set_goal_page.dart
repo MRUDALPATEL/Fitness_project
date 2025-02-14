@@ -25,10 +25,38 @@ class _SetGoalPageState extends State<SetGoalPage> {
     super.dispose();
   }
 
+  void _setGoal(BuildContext context) {
+    if (_goalType == null || _duration == null || _goalValueController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill all fields before setting a goal.')),
+      );
+      return;
+    }
+
+    final double? goalValue = double.tryParse(_goalValueController.text);
+    if (goalValue == null || goalValue <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid goal value.')),
+      );
+      return;
+    }
+
+    final consumptionProvider = Provider.of<ConsumptionProvider>(context, listen: false);
+    consumptionProvider.setGoal(
+      goalType: _goalType!,
+      goalValue: goalValue,
+      duration: _duration!,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Goal set successfully!')),
+    );
+
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final consumptionProvider = Provider.of<ConsumptionProvider>(context, listen: false);
-
     return Scaffold(
       backgroundColor: ColorManager.darkGrey,
       appBar: AppBar(
@@ -45,8 +73,9 @@ class _SetGoalPageState extends State<SetGoalPage> {
                 value: _goalType,
                 items: const [
                   DropdownMenuItem(value: 'Protein', child: Text('Protein')),
-                  DropdownMenuItem(value: 'Vitamins', child: Text('Vitamins')),
-                  // Add more goal types as needed
+                  DropdownMenuItem(value: 'Carbs', child: Text('Carbs')),
+                  DropdownMenuItem(value: 'Fats', child: Text('Fats')),
+                  DropdownMenuItem(value: 'Fiber', child: Text('Fiber')),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -94,14 +123,7 @@ class _SetGoalPageState extends State<SetGoalPage> {
               ),
               const SizedBox(height: 20),
               LimeGreenRoundedButtonWidget(
-                onTap: () {
-                  consumptionProvider.setGoal(
-                    goalType: _goalType!,
-                    goalValue: double.parse(_goalValueController.text),
-                    duration: _duration!,
-                  );
-                  Navigator.of(context).pop();
-                },
+                onTap: () => _setGoal(context),
                 title: StringsManager.setGoal,
               ),
             ],

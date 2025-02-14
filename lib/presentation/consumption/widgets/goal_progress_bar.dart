@@ -1,5 +1,5 @@
+import 'package:fitnessapp/utils/managers/color_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:fitnessapp/presentation/consumption/providers/consumption_provider.dart';
 
@@ -8,101 +8,103 @@ class GoalProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final consumptionProvider =
-        Provider.of<ConsumptionProvider>(context); // Listen for changes
-
-    // Safely access the goal and current values from the provider
-    final double goalCalories = consumptionProvider.goalValue != 0
-        ? consumptionProvider.goalValue
-        : 1.0; // Avoid division by zero
-    final double currentCalories = consumptionProvider.kCalaDay;
-
-    final double goalCarbs = consumptionProvider.goalCarbs != 0
-        ? consumptionProvider.goalCarbs
-        : 1.0; // Avoid division by zero
-    final double currentCarbs = consumptionProvider.currentCarbs;
-
-    final double goalProteins = consumptionProvider.goalProteins != 0
-        ? consumptionProvider.goalProteins
-        : 1.0; // Avoid division by zero
-    final double currentProteins = consumptionProvider.currentProteins;
-
-    final double goalFats = consumptionProvider.goalFats != 0
-        ? consumptionProvider.goalFats
-        : 1.0; // Avoid division by zero
-    final double currentFats = consumptionProvider.currentFats;
-
-    // Calculate progress percentages
-    final double caloriesProgress =
-        (currentCalories / goalCalories).clamp(0.0, 1.0);
-    final double carbsProgress = (currentCarbs / goalCarbs).clamp(0.0, 1.0);
-    final double proteinsProgress =
-        (currentProteins / goalProteins).clamp(0.0, 1.0);
-    final double fatsProgress = (currentFats / goalFats).clamp(0.0, 1.0);
+    final consumptionProvider = Provider.of<ConsumptionProvider>(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ProgressIndicatorRow(
-          title: "Calories Progress",
-          progress: caloriesProgress,
-          progressColor: Colors.green,
+        const Text(
+          "Your Goals",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         const SizedBox(height: 10),
-        ProgressIndicatorRow(
-          title: "Carbs Progress",
-          progress: carbsProgress,
-          progressColor: Colors.blue,
-        ),
-        const SizedBox(height: 10),
-        ProgressIndicatorRow(
-          title: "Proteins Progress",
-          progress: proteinsProgress,
-          progressColor: Colors.orange,
-        ),
-        const SizedBox(height: 10),
-        ProgressIndicatorRow(
-          title: "Fats Progress",
-          progress: fatsProgress,
-          progressColor: Colors.red,
+        
+        // Goals in a horizontal scrollable row
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              GoalCard(
+                title: "Calories",
+                goal: consumptionProvider.goalValue,
+                current: consumptionProvider.kCalaDay,
+                icon: Icons.local_fire_department,
+                color: Colors.green,
+              ),
+              GoalCard(
+                title: "Carbs",
+                goal: consumptionProvider.goalCarbs,
+                current: consumptionProvider.currentCarbs,
+                icon: Icons.restaurant,
+                color: Colors.blue,
+              ),
+              GoalCard(
+                title: "Proteins",
+                goal: consumptionProvider.goalProteins,
+                current: consumptionProvider.currentProteins,
+                icon: Icons.fitness_center,
+                color: Colors.orange,
+              ),
+              GoalCard(
+                title: "Fats",
+                goal: consumptionProvider.goalFats,
+                current: consumptionProvider.currentFats,
+                icon: Icons.fastfood,
+                color: Colors.red,
+              ),
+            ],
+          ),
         ),
       ],
     );
   }
 }
 
-class ProgressIndicatorRow extends StatelessWidget {
+class GoalCard extends StatelessWidget {
   final String title;
-  final double progress;
-  final Color progressColor;
+  final double goal;
+  final double current;
+  final IconData icon;
+  final Color color;
 
-  const ProgressIndicatorRow({
+  const GoalCard({
     Key? key,
     required this.title,
-    required this.progress,
-    required this.progressColor,
+    required this.goal,
+    required this.current,
+    required this.icon,
+    required this.color,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-        LinearPercentIndicator(
-          lineHeight: 14.0,
-          percent: progress, // Ensures it's clamped between 0.0 and 1.0
-          center: Text(
-            "${(progress * 100).toStringAsFixed(1)}%",
-            style: const TextStyle(fontSize: 12),
+    return Container(
+      width: 85, // Compact width for better row fit
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: ColorManager.darkGrey,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: color, width: 1),
+       
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: color, size: 28),
+          const SizedBox(height: 5),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: Colors.white),
           ),
-          backgroundColor: Colors.green,
-          progressColor: progressColor,
-        ),
-      ],
+          const SizedBox(height: 3),
+          Text(
+            "${current.toStringAsFixed(1)} / ${goal.toStringAsFixed(1)}",
+            style: TextStyle(color: Colors.white, fontSize: 12),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }

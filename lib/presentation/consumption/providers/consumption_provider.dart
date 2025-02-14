@@ -306,6 +306,31 @@ class ConsumptionProvider with ChangeNotifier {
       rethrow;
     }
   }
+  
+ Future<void> fetchGoal() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    print('User is not authenticated');
+    return;
+  }
+
+  try {
+    final goalSnapshot =
+        await FirebaseFirestore.instance.collection('goals').doc(user.uid).get();
+
+    if (goalSnapshot.exists) {
+      final goalData = goalSnapshot.data()!;
+      goalValue = (goalData['goalValue'] as num).toDouble();
+      print("Goal fetched: $goalValue");
+      notifyListeners();
+    } else {
+      print("No goal found.");
+    }
+  } catch (e) {
+    print("Error fetching goal: $e");
+    rethrow;
+  }
+}
 
   /// Notifications
   Future<void> sendNotification({

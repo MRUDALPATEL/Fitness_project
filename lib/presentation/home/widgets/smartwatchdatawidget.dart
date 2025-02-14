@@ -83,7 +83,7 @@ class SmartwatchDataWidget extends StatelessWidget {
                 Icon(icon, size: 32, color: color),
                 const SizedBox(height: 8),
                 Text(
-                  "$value $unit",
+                  "$value",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
