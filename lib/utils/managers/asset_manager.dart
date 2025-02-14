@@ -11,6 +11,7 @@ class ImageManager {
   static const splashBG7WP = '$imagePath/boarding7.webp';
   static const google = '$imagePath/google.png';
   static const logo = '$imagePath/logo.webp';
+  static const logo1 = '$imagePath/FitTrackPro.png';
   static const fork = '$imagePath/fork.webp';
   static const carousel1WP = '$imagePath/carousel1.webp';
   static const carousel2WP = '$imagePath/carousel2.webp';

@@ -120,20 +120,21 @@ class _LoginPageState extends State<LoginPage>
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(
-              top: PaddingManager.p12,
+              top: PaddingManager.p1,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: PaddingManager.p8),
-                  child: SizedBox(
-                    width: SizeManager.s250.w,
+                  padding: const EdgeInsets.only(bottom: PaddingManager.p1),
+                  child: SizedBox(  
+                    width: SizeManager.s350.w,
                     height: SizeManager.s250.h,
                     child: Image.asset(
-                      ImageManager.logo,
+                      ImageManager.logo1,
                     ),
+                    
                   ),
                 ),
                 LoginOrRegisterView(
