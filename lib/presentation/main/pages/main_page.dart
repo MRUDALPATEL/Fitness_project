@@ -34,7 +34,9 @@ class _MainPageState extends State<MainPage> {
       _currentIndex = index;
     });
   }
-
+  
+  
+   
   List<Widget> pages = const [
     HomePage(),
     ConsumptionPage(),
@@ -127,7 +129,7 @@ class _MainPageState extends State<MainPage> {
         size: SizeManager.s28,
       ),
       Icon(
-        Icons.list,
+        Icons.fitness_center,
         color: isWorkoutsPage ? ColorManager.limerGreen2 : ColorManager.grey2,
         size: SizeManager.s28,
       ),

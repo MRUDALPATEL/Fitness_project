@@ -113,7 +113,7 @@ class StringsManager {
   static const String changeHeightText = 'I wish I was a\nlittle bit taller...';
   static const String changeWeightText = 'Getting fatter or\n getting fitter?';
   static const String delete = 'Delete';
-  static const String newExercise = 'New exercise';
+  static const String newExercise = 'Add Workout';
   static const String exerciseHint = 'Exercise';
   static const String setNumberHint = 'Sets';
   static const String repNumberHint = 'Reps';

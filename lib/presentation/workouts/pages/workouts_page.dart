@@ -6,7 +6,6 @@ import 'package:fitnessapp/presentation/workouts/providers/workout_provider.dart
 import 'package:fitnessapp/presentation/workouts/widgets/new_exercise_button.dart';
 import 'package:fitnessapp/presentation/workouts/widgets/exercise_widget.dart';
 import 'package:fitnessapp/utils/managers/color_manager.dart';
-import 'package:fitnessapp/utils/managers/value_manager.dart';
 import 'package:fitnessapp/utils/router/router.dart';
 
 class WorkoutPage extends StatefulWidget {
@@ -17,124 +16,121 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
-  late Future<void> _workoutsFuture;
-
   @override
   void initState() {
     super.initState();
-    _workoutsFuture = Provider.of<WorkoutProvider>(context, listen: false).fetchAndSetWorkouts();
+    final provider = Provider.of<WorkoutProvider>(context, listen: false);
+    provider.fetchAndSetWorkouts();
   }
 
   Future<void> _handleRefresh() async {
-    await Provider.of<WorkoutProvider>(context, listen: false).fetchAndSetWorkouts();
+    final provider = Provider.of<WorkoutProvider>(context, listen: false);
+    
+    try {
+      await provider.fetchAndSetWorkouts();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to refresh: $e')),
+        );
+      }
+    }
   }
 
   void _deleteWorkout(String workoutID) {
     Provider.of<WorkoutProvider>(context, listen: false).deleteWorkout(workoutID: workoutID);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Workout deleted successfully!'),
-        duration: Duration(seconds: 2),
-      ),
+      const SnackBar(content: Text('Workout deleted successfully!')),
     );
   }
 
   void _finishWorkout(String workoutID, String name, int repNumber, int setNumber, DateTime dateTime) {
-    Provider.of<WorkoutProvider>(context, listen: false).finishWorkout(
+    final provider = Provider.of<WorkoutProvider>(context, listen: false);
+    provider.finishWorkout(
       workoutID: workoutID,
       name: name,
       repNumber: repNumber,
       setNumber: setNumber,
       dateTime: dateTime,
     );
-    Provider.of<WorkoutProvider>(context, listen: false).deleteWorkout(workoutID: workoutID);
+    provider.deleteWorkout(workoutID: workoutID);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Workout marked as finished!'),
-        duration: Duration(seconds: 2),
-      ),
+      const SnackBar(content: Text('Workout marked as finished!')),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WorkoutProvider>(
-      builder: (context, workoutsProvider, _) => SafeArea(
-        child: Column(
-          children: [
-            // Add Exercise Button
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.h),
-              child: NewExerciseButton(
-                onTap: () {
-                  Navigator.of(context).pushNamed(Routes.addNewExerciseRoute);
-                },
-              ),
-            ),
-            Expanded(
-              child: LiquidPullToRefresh(
-                height: SizeManager.s250.h,
-                color: ColorManager.darkGrey,
-                animSpeedFactor: 2,
-                backgroundColor: ColorManager.white2,
-                onRefresh: _handleRefresh,
-                child: FutureBuilder<void>(
-                  future: _workoutsFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
+    return Scaffold(
+      body: SafeArea(
+        child: LiquidPullToRefresh(
+          height: 80.h,
+          color: ColorManager.white,
+          animSpeedFactor: 2,
+          backgroundColor: ColorManager.black,
+          onRefresh: _handleRefresh,
+          child: Container(
+            color: ColorManager.darkGrey,
+            child: Stack(
+              children: [
+                Consumer<WorkoutProvider>(
+                  builder: (context, workoutsProvider, _) {
+                    if (workoutsProvider.isLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    if (snapshot.hasError) {
+                    if (workoutsProvider.hasError) {
                       return Center(
                         child: Text(
-                          'An error occurred: ${snapshot.error}',
+                          'An error occurred: ${workoutsProvider.errorMessage}',
                           style: TextStyle(fontSize: 16.sp, color: Colors.red),
                         ),
                       );
                     }
 
                     final workouts = workoutsProvider.workouts;
-                    if (workouts.isEmpty) {
-                      return Center(
-                        child: Text(
-                          "No exercises available. Tap the button above to add a new exercise!",
-                          style: TextStyle(fontSize: 16.sp, color: ColorManager.limeGreen),
-                          textAlign: TextAlign.center,
+                    return ListView(
+                      padding: EdgeInsets.all(16.w),
+                      children: [
+                        // ✅ Add Exercise Button at the top
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                          child: NewExerciseButton(
+                            onTap: () => Navigator.of(context).pushNamed(Routes.newWorkoutRoute),
+                          ),
                         ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      itemCount: workouts.length,
-                      itemBuilder: (context, index) {
-                        final workout = workouts[index];
-                        return ExerciseWidget(
-                          name: workout.name,
-                          repNumber: workout.repNumber,
-                          setNumber: workout.setNumber,
-                          id: workout.id,
-                          onDeleted: (_) {
-                            _deleteWorkout(workout.id);
-                          },
-                          onFinished: (_) {
-                            _finishWorkout(
-                              workout.id,
-                              workout.name,
-                              workout.repNumber,
-                              workout.setNumber,
-                              workout.dateTime,
-                            );
-                          },
-                        );
-                      },
+                        
+                        if (workouts.isEmpty)
+                          Center(
+                            child: Text(
+                              "No exercises available. Tap the button above to add a new exercise!",
+                              style: TextStyle(fontSize: 16.sp, color: ColorManager.limeGreen),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        else
+                          ...workouts.map((workout) => ExerciseWidget(
+                                name: workout.name,
+                                repNumber: workout.repNumber,
+                                setNumber: workout.setNumber,
+                                id: workout.id,
+                                onDeleted: (_) => _deleteWorkout(workout.id),
+                                onFinished: (_) => _finishWorkout(
+                                  workout.id,
+                                  workout.name,
+                                  workout.repNumber,
+                                  workout.setNumber,
+                                  workout.dateTime,
+                                ),
+                              )),
+                      ],
                     );
                   },
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

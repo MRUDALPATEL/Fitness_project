@@ -65,6 +65,7 @@ class ProfileProvider with ChangeNotifier {
     return [..._flSpots];
   }
 
+ 
   Future<void> fetchAndSetWeight() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -209,4 +210,7 @@ class ProfileProvider with ChangeNotifier {
       rethrow;
     }
   }
+  
+
+
 }
