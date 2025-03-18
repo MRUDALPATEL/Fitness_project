@@ -95,6 +95,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ),
+                    Text(
+                      'Athlete Category: ${homeProvider.userData['category']}',
+                      style: StyleManager.profileBodyMeasurmentsNameTextSTyle,
+                      textAlign: TextAlign.left,
+                    ),
                     EditTextButton(
                       onTap: () => Navigator.of(context)
                           .pushNamed(Routes.changeMeasurementsRoute),
@@ -352,3 +357,4 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+

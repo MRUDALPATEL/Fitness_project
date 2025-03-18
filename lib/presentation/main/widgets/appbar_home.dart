@@ -27,7 +27,7 @@ class HomePageAppBarWidget extends StatelessWidget {
                   height: SizeManager.s40.h,
                   width: SizeManager.s40.w,
                   decoration: BoxDecoration(
-                    color: ColorManager.grey3,
+                    color: ColorManager.darkGrey,
                     borderRadius: BorderRadius.circular(
                       RadiusManager.r40.r,
                     ),

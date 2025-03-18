@@ -34,7 +34,9 @@ class _MainPageState extends State<MainPage> {
       _currentIndex = index;
     });
   }
-
+  
+  
+   
   List<Widget> pages = const [
     HomePage(),
     ConsumptionPage(),
@@ -85,7 +87,7 @@ class _MainPageState extends State<MainPage> {
         if (now.year > lastMealDateTime.year ||
             now.month > lastMealDateTime.month ||
             now.day > lastMealDateTime.day) {
-          await consumptionProvider.clearMealsIfDayChanges(lastMealDateTime);
+          await consumptionProvider.clearDataIfDayChanges();
           await consumptionProvider.fetchAndSetMeals();
         }
       }
@@ -95,7 +97,7 @@ class _MainPageState extends State<MainPage> {
         if (now.year > lastWaterDateTime.year ||
             now.month > lastWaterDateTime.month ||
             now.day > lastWaterDateTime.day) {
-          await consumptionProvider.clearWaterIfDayChanges(lastWaterDateTime);
+          await consumptionProvider.clearDataIfDayChanges();
           await consumptionProvider.fetchAndSetWater();
         }
       }
@@ -127,7 +129,7 @@ class _MainPageState extends State<MainPage> {
         size: SizeManager.s28,
       ),
       Icon(
-        Icons.list,
+        Icons.fitness_center,
         color: isWorkoutsPage ? ColorManager.limerGreen2 : ColorManager.grey2,
         size: SizeManager.s28,
       ),

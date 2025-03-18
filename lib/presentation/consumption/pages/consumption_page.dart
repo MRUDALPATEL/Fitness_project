@@ -24,20 +24,28 @@ class _ConsumptionPageState extends State<ConsumptionPage> {
     provider.fetchAndSetMeals();
     provider.fetchGoal();
   }
-
-  Future<void> _handleRefresh() async {
-    final provider = Provider.of<ConsumptionProvider>(context, listen: false);
+Future<void> _handleRefresh() async {
+  final provider = Provider.of<ConsumptionProvider>(context, listen: false);
+  
+  try {
     await provider.fetchAndSetMeals();
     await provider.fetchGoal();
-    return Future.delayed(const Duration(seconds: 2));
+  } catch (e) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to refresh: $e')),
+      );
+    }
   }
+}
+
 @override
 Widget build(BuildContext context) {
   return Scaffold(
     body: SafeArea(
       child: LiquidPullToRefresh(
         height: 80.h,
-        color: ColorManager.darkGrey,
+        color: ColorManager.white,
         animSpeedFactor: 2,
         backgroundColor: ColorManager.black,
         onRefresh: _handleRefresh,

@@ -47,7 +47,7 @@ class _SettingsPageAppBarWidgetState extends State<SettingsPageAppBarWidget> {
             height: SizeManager.s40.h,
             width: SizeManager.s40.w,
             decoration: BoxDecoration(
-              color: ColorManager.grey3,
+              color: ColorManager.darkGrey,
               borderRadius: BorderRadius.circular(
                 RadiusManager.r40.r,
               ),

@@ -75,9 +75,9 @@ class MealWidget extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
-                    top: PaddingManager.p28,
+                    top: PaddingManager.p20,
                     left: PaddingManager.p28,
-                    bottom: PaddingManager.p12,
+                    //bottom: PaddingManager.p4,
                     right: PaddingManager.p28,
                   ),
                   child: Row(
@@ -130,7 +130,7 @@ class MealWidget extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${amount.round()} G',
+                        '${amount.round()} ',
                         style: StyleManager.mealWidgetDataTextStyle,
                       ),
                     ],

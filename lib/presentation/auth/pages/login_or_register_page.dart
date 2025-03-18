@@ -1,3 +1,4 @@
+import 'package:fitnessapp/presentation/auth/widgets/google_signin_button-widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,12 +34,14 @@ class _LoginPageState extends State<LoginPage>
   void dispose() {
     _passwordController.dispose();
     _emailController.dispose();
+    _repeatPasswordController.dispose();
     super.dispose();
   }
 
   bool get isEmailNotEmpty => _emailController.text.isNotEmpty;
   bool get isPasswordConfirmed =>
-      _passwordController == _repeatPasswordController;
+      _passwordController.text == _repeatPasswordController.text;
+
   bool get isRegisterView => _authMode == AuthMode.signUp;
   bool get isLoginView => _authMode == AuthMode.signIn;
 
@@ -84,7 +87,9 @@ class _LoginPageState extends State<LoginPage>
         debugPrint('Sign-In Successful');
       } catch (e) {
         debugPrint('Sign-In Failed: $e');
-        rethrow;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Sign-In Failed: ${e.toString()}")),
+        );
       }
     }
 
@@ -105,12 +110,12 @@ class _LoginPageState extends State<LoginPage>
     }
 
 // Inside onPressed function
-    void onPressed() {
+    void onPressed() async {
       debugPrint('Auth Button Pressed: ${isLoginView ? 'SignIn' : 'SignUp'}');
       if (isLoginView) {
-        signUserIn();
+        await signUserIn(); // ✅ FIXED
       } else if (isRegisterView) {
-        signUserUp();
+        await signUserUp(); // ✅ FIXED
       }
     }
 
@@ -127,9 +132,9 @@ class _LoginPageState extends State<LoginPage>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: PaddingManager.p1),
-                  child: SizedBox(  
-                    width: SizeManager.s350.w,
+                  padding: const EdgeInsets.only(bottom: PaddingManager.p8),
+                  child: SizedBox(
+                    width: SizeManager.s250.w,
                     height: SizeManager.s250.h,
                     child: Image.asset(
                       ImageManager.logo1,
@@ -205,14 +210,11 @@ class _LoginPageState extends State<LoginPage>
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: PaddingManager.p18),
-                  child: LimeGreenRoundedButtonWidget(
-                    onTap: _signInWithGoogle,
-                    title: StringsManager.signInWithGoogle,
-                  ),
+                  padding: EdgeInsets.only(top: 18.h), // ✅ ScreenUtil applied
+                  child: GoogleSignInButtonWidget(onTap: _signInWithGoogle),
                 ),
               ],
-            ).animate().fadeIn(duration: 500.ms),
+            )
           ),
         ),
       ),

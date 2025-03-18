@@ -1,6 +1,6 @@
-
-
+import 'package:fitnessapp/presentation/consumption/pages/new_meal_page_test.dart';
 import 'package:fitnessapp/presentation/settings/widgets/smartwatchsettingpage.dart';
+import 'package:fitnessapp/presentation/workouts/pages/new_workout_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnessapp/presentation/auth/pages/add_data_page.dart';
 import 'package:fitnessapp/presentation/auth/pages/auth_page.dart';
@@ -20,7 +20,6 @@ import 'package:fitnessapp/presentation/settings/pages/delete_account_page.dart'
 import 'package:fitnessapp/presentation/workouts/pages/new_exercise_page.dart';
 import 'package:fitnessapp/utils/managers/string_manager.dart';
 
-
 class Routes {
   static const String boardingRoute = '/';
   static const String mainRoute = '/main';
@@ -32,6 +31,8 @@ class Routes {
   static const String changeEmailRoute = '/changeEmail';
   static const String deleteAccRoute = '/deleteAcc';
   static const String newMealRoute = 'newMeal';
+  static const String newMealRouteTest = 'newMealTest';
+  static const String newWorkoutRoute = 'newWorkout';
   static const String addDataRoute = '/addData';
   static const String addWaterRoute = '/addWater';
   static const String addNewExerciseRoute = '/addExercise';
@@ -61,17 +62,22 @@ class RouteGenerator {
       case Routes.changeEmailRoute:
         return MaterialPageRoute(builder: (_) => const ChangeEmailPage());
       case Routes.SmartwatchSettingsPage:
-        return MaterialPageRoute(builder: (_) => const SmartwatchSettingsPage());
+        return MaterialPageRoute(
+            builder: (_) => const SmartwatchSettingsPage());
       case Routes.deleteAccRoute:
         return MaterialPageRoute(builder: (_) => const DeleteAccountPage());
       case Routes.newMealRoute:
         return MaterialPageRoute(builder: (_) => const NewMealPage());
+      case Routes.newMealRouteTest:
+        return MaterialPageRoute(builder: (_) => const NewMealPageTest());
       case Routes.addDataRoute:
         return MaterialPageRoute(builder: (_) => const AddDataPage());
       case Routes.addWaterRoute:
         return MaterialPageRoute(builder: (_) => const DrinkPage());
       case Routes.addNewExerciseRoute:
         return MaterialPageRoute(builder: (_) => const NewExercisePage());
+      case Routes.newWorkoutRoute: // ✅ Added this missing case
+        return MaterialPageRoute(builder: (_) => const NewWorkoutPage());
       case Routes.changeWeightRoute:
         return MaterialPageRoute(builder: (_) => const ChangeWeightPage());
       case Routes.changeMeasurementsRoute:

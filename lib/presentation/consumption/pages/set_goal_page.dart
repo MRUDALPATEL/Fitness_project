@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitnessapp/presentation/consumption/providers/consumption_provider.dart';
 import 'package:fitnessapp/utils/managers/color_manager.dart';
 import 'package:fitnessapp/utils/managers/string_manager.dart';
@@ -18,6 +20,7 @@ class _SetGoalPageState extends State<SetGoalPage> {
   final TextEditingController _goalValueController = TextEditingController();
   String? _goalType;
   String? _duration;
+  Map<String, double> _userGoals = {}; // Store multiple goals
 
   @override
   void dispose() {
@@ -26,34 +29,36 @@ class _SetGoalPageState extends State<SetGoalPage> {
   }
 
   void _setGoal(BuildContext context) {
-    if (_goalType == null || _duration == null || _goalValueController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields before setting a goal.')),
-      );
-      return;
-    }
-
-    final double? goalValue = double.tryParse(_goalValueController.text);
-    if (goalValue == null || goalValue <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid goal value.')),
-      );
-      return;
-    }
-
-    final consumptionProvider = Provider.of<ConsumptionProvider>(context, listen: false);
-    consumptionProvider.setGoal(
-      goalType: _goalType!,
-      goalValue: goalValue,
-      duration: _duration!,
-    );
-
+  if (_goalType == null || _duration == null || _goalValueController.text.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Goal set successfully!')),
+      const SnackBar(content: Text('Please fill all fields before setting a goal.')),
     );
-
-    Navigator.of(context).pop();
+    return;
   }
+
+  final double? goalValue = double.tryParse(_goalValueController.text);
+  if (goalValue == null || goalValue <= 0) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please enter a valid goal value.')),
+    );
+    return;
+  }
+
+  final consumptionProvider = Provider.of<ConsumptionProvider>(context, listen: false);
+
+  // Fetch existing goals from provider before updating
+  Map<String, double> updatedGoals = Map.from(consumptionProvider.goals);
+  updatedGoals[_goalType!] = goalValue;
+
+  consumptionProvider.setGoal(goals: updatedGoals, duration: _duration!);
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text('Goal set successfully!')),
+  );
+
+  Navigator.of(context).pop();
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +68,7 @@ class _SetGoalPageState extends State<SetGoalPage> {
         backgroundColor: ColorManager.darkGrey,
         elevation: SizeManager.s0,
         title: Text(StringsManager.setGoal, style: StyleManager.abTitleTextStyle),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
         child: Padding(
@@ -71,6 +77,7 @@ class _SetGoalPageState extends State<SetGoalPage> {
             children: [
               DropdownButtonFormField<String>(
                 value: _goalType,
+                dropdownColor: ColorManager.darkGrey,
                 items: const [
                   DropdownMenuItem(value: 'Protein', child: Text('Protein')),
                   DropdownMenuItem(value: 'Carbs', child: Text('Carbs')),
@@ -89,6 +96,7 @@ class _SetGoalPageState extends State<SetGoalPage> {
                     borderSide: BorderSide(color: ColorManager.white),
                   ),
                 ),
+                style: const TextStyle(color: ColorManager.white),
               ),
               TextField(
                 controller: _goalValueController,
@@ -100,9 +108,11 @@ class _SetGoalPageState extends State<SetGoalPage> {
                   ),
                 ),
                 keyboardType: TextInputType.number,
+                style: const TextStyle(color: ColorManager.white),
               ),
               DropdownButtonFormField<String>(
                 value: _duration,
+                dropdownColor: ColorManager.darkGrey,
                 items: const [
                   DropdownMenuItem(value: 'Daily', child: Text('Daily')),
                   DropdownMenuItem(value: 'Weekly', child: Text('Weekly')),
@@ -120,12 +130,15 @@ class _SetGoalPageState extends State<SetGoalPage> {
                     borderSide: BorderSide(color: ColorManager.white),
                   ),
                 ),
+                style: const TextStyle(color: ColorManager.white),
               ),
               const SizedBox(height: 20),
               LimeGreenRoundedButtonWidget(
                 onTap: () => _setGoal(context),
                 title: StringsManager.setGoal,
               ),
+              const SizedBox(height: 20),
+              
             ],
           ),
         ),

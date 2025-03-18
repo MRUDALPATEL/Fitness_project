@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fitnessapp/model/meal_model.dart';
 import 'package:fitnessapp/model/water_model.dart';
 import 'package:fitnessapp/utils/notifications/notification_manager.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class ConsumptionProvider with ChangeNotifier {
@@ -128,12 +130,22 @@ class ConsumptionProvider with ChangeNotifier {
         'dateTime': dateTime,
       });
       print('Meal added successfully');
+
+       // Update local values
+    currentCalories += calories;
+    currentCarbs += carbs;
+    currentProteins += proteins;
+    currentFats += fats;
+      await fetchAndSetMeals();
       notifyListeners();
     } catch (e) {
       print('Error adding meal: $e');
       rethrow;
     }
   }
+ 
+ 
+   
 
   Future<void> fetchAndSetMeals() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -144,7 +156,7 @@ class ConsumptionProvider with ChangeNotifier {
 
     try {
       print("Fetching meals...");
-      isLoading = true;  // Set to true while loading
+      isLoading = true; // Set to true while loading
 
       final mealsSnapshot = await FirebaseFirestore.instance
           .collection('meals')
@@ -165,7 +177,7 @@ class ConsumptionProvider with ChangeNotifier {
       // Sorting the meals list by dateTime in descending order
       meals.sort((a, b) => b.dateTime.compareTo(a.dateTime));
       print('Meals fetched successfully');
-      isLoading = false;  // Set to false while loading
+      isLoading = false; // Set to false while loading
       await getkCal();
       notifyListeners();
     } catch (e) {
@@ -236,101 +248,145 @@ class ConsumptionProvider with ChangeNotifier {
   }
 
   Future<void> fetchAndSetWater() async {
-  User? user = FirebaseAuth.instance.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
 
-  if (user == null) {
-    print('User is not authenticated');
-    return;
+    if (user == null) {
+      print('User is not authenticated');
+      return;
+    }
+
+    try {
+      final waterSnapshot = await FirebaseFirestore.instance
+          .collection('meals')
+          .doc(user.uid)
+          .collection('waterData')
+          .get();
+
+      print('Water data fetched: ${waterSnapshot.docs.length} documents');
+
+      final List<WaterModel> loadedWater = waterSnapshot.docs.map((doc) {
+        final waterData = doc.data();
+
+        return WaterModel(
+          id: doc.id,
+          amount: (waterData['amount'] as num).toDouble(),
+          dateTime: (waterData['dateTime'] as Timestamp).toDate(),
+        );
+      }).toList();
+
+      print('Loaded water data: ${loadedWater.length} entries');
+
+      water.clear();
+      water.addAll(loadedWater);
+
+      // Optionally check water list after adding new data
+      print('Water list after fetching: ${water.length} entries');
+
+      await getWater();
+
+      print('Finished fetching water data and notifying listeners');
+      notifyListeners();
+    } catch (e) {
+      print('Error fetching water data: $e');
+      rethrow;
+    }
   }
-
-  
-
-  try {
-    final waterSnapshot = await FirebaseFirestore.instance
-        .collection('meals')
-        .doc(user.uid)
-        .collection('waterData')
-        .get();
-
-    print('Water data fetched: ${waterSnapshot.docs.length} documents');
-
-    final List<WaterModel> loadedWater = waterSnapshot.docs.map((doc) {
-      final waterData = doc.data();
-      
-      return WaterModel(
-        id: doc.id,
-        amount: (waterData['amount'] as num).toDouble(),
-        dateTime: (waterData['dateTime'] as Timestamp).toDate(),
-      );
-    }).toList();
-
-    print('Loaded water data: ${loadedWater.length} entries');
-
-    water.clear();
-    water.addAll(loadedWater);
-
-    // Optionally check water list after adding new data
-    print('Water list after fetching: ${water.length} entries');
-
-    await getWater();
-
-    print('Finished fetching water data and notifying listeners');
-    notifyListeners();
-  } catch (e) {
-    print('Error fetching water data: $e');
-    rethrow;
-  }
-}
-
 
   Future<void> getWater() async {
     waterADay = water.fold(0.0, (sum, water) => sum + water.amount);
     notifyListeners();
   }
 
-  /// Goal Handling
+  Map<String, double> goals = {};
+  String duration = '';
+
   Future<void> setGoal({
-    required String goalType,
-    required double goalValue,
+    required Map<String, double> goals,
     required String duration,
   }) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final docRef = FirebaseFirestore.instance.collection('goals').doc(user.uid);
+
+    // Fetch existing goals from Firestore before updating
+    final docSnapshot = await docRef.get();
+    Map<String, dynamic> existingGoals = docSnapshot.exists
+        ? (docSnapshot.data()?['goals'] as Map<String, dynamic>? ?? {})
+        : {};
+
+    // Merge new goals with existing ones
+    existingGoals.addAll(goals);
+
+    await docRef.set({
+      'goals': existingGoals,
+      'duration': duration,
+    }, SetOptions(merge: true));
+
+    this.goals = existingGoals.map((key, value) => MapEntry(key, (value as num).toDouble()));
+    this.duration = duration;
+    
+    await fetchGoal();
+    notifyListeners();
+  }
+
+  Future<void> fetchGoal() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
     try {
-      User? user = FirebaseAuth.instance.currentUser;
-      await FirebaseFirestore.instance.collection('goals').doc(user!.uid).set({
-        'goalType': goalType,
-        'goalValue': goalValue,
-        'duration': duration,
-      });
+      final goalSnapshot = await FirebaseFirestore.instance.collection('goals').doc(user.uid).get();
+
+      if (goalSnapshot.exists) {
+        final goalData = goalSnapshot.data();
+        if (goalData != null) {
+          final Map<String, dynamic> fetchedGoals = goalData['goals'] ?? {};
+
+          goals = fetchedGoals.map((key, value) => MapEntry(key, (value as num).toDouble()));
+          duration = goalData['duration'] ?? '';
+
+          print("✅ Goals Fetched: $goals");
+          
+
+        }
+      } else {
+        print("⚠ No goals found.");
+      }
+
       notifyListeners();
     } catch (e) {
-      rethrow;
+      print("❌ Error fetching goal: $e");
     }
   }
-  
- Future<void> fetchGoal() async {
-  User? user = FirebaseAuth.instance.currentUser;
-  if (user == null) {
-    print('User is not authenticated');
-    return;
-  }
 
-  try {
-    final goalSnapshot =
-        await FirebaseFirestore.instance.collection('goals').doc(user.uid).get();
+void updateCurrentValues() {
+  currentCalories = meals.fold(0.0, (sum, meal) => sum + meal.calories);
+  currentCarbs = meals.fold(0.0, (sum, meal) => sum + meal.carbs);
+  currentProteins = meals.fold(0.0, (sum, meal) => sum + meal.proteins);
+  currentFats = meals.fold(0.0, (sum, meal) => sum + meal.fats);
 
-    if (goalSnapshot.exists) {
-      final goalData = goalSnapshot.data()!;
-      goalValue = (goalData['goalValue'] as num).toDouble();
-      print("Goal fetched: $goalValue");
-      notifyListeners();
-    } else {
-      print("No goal found.");
-    }
-  } catch (e) {
-    print("Error fetching goal: $e");
-    rethrow;
+  notifyListeners();
+}
+
+  double getCurrentValue(String goalType) {
+  switch (goalType.toLowerCase()) {
+    case "calories":
+      return kCalaDay;
+    case "carbs":
+      return currentCarbs;
+    case "proteins":
+      return currentProteins;
+    case "fats":
+      return currentFats;
+    default:
+      return 0.0; 
+      
+
   }
 }
+
+
+
 
   /// Notifications
   Future<void> sendNotification({
@@ -350,23 +406,22 @@ class ConsumptionProvider with ChangeNotifier {
     }
   }
 
-  Future<void> clearMealsIfDayChanges(DateTime lastMealDateTime) async {
-    final now = DateTime.now();
-    if (now.year > lastMealDateTime.year ||
-        now.month > lastMealDateTime.month ||
-        now.day > lastMealDateTime.day) {
-      meals.clear();
-      notifyListeners();
-    }
-  }
+  Future<void> clearDataIfDayChanges() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastUpdateTimestamp = prefs.getInt('last_update') ?? 0;
+    final lastUpdate = DateTime.fromMillisecondsSinceEpoch(lastUpdateTimestamp);
 
-  Future<void> clearWaterIfDayChanges(DateTime lastWaterDateTime) async {
     final now = DateTime.now();
-    if (now.year > lastWaterDateTime.year ||
-        now.month > lastWaterDateTime.month ||
-        now.day > lastWaterDateTime.day) {
+
+    if (now.year > lastUpdate.year ||
+        now.month > lastUpdate.month ||
+        now.day > lastUpdate.day) {
+      meals.clear();
       water.clear();
       notifyListeners();
+
+      // Update last update time
+      await prefs.setInt('last_update', now.millisecondsSinceEpoch);
     }
   }
 }

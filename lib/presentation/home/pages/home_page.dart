@@ -1,3 +1,4 @@
+import 'package:fitnessapp/presentation/home/widgets/finished_workout_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -68,6 +69,7 @@ class _HomePageState extends State<HomePage> {
               stepsNotifier: stepsNotifier,
               caloriesNotifier: caloriesNotifier,
             ),
+            FinishedWorkoutsWidget(),
           ],
         ),
       ),
