@@ -39,7 +39,7 @@ class StringsManager {
   static const String genderHint = 'Gender';
   static const String genderManHint = 'MAN';
   static const String genderWomanHint = 'WOMAN';
-  static const String fitnessappioABtitle = 'FITNESS.IO';
+  static const String fitnessappioABtitle = 'FITNESS';
   static const String accountSpacer = 'Account';
   static const String generalSpacer = 'General';
   static const String inviteFriend = 'Invite Friends';
@@ -55,7 +55,7 @@ class StringsManager {
   static const String oldEmailHint = 'Old Email';
   static const String newEmailHint = 'New Email';
   static const String deleteAccABtitle = 'DELETE ACCOUNT';
-  static const String procede = 'PROCEDE';
+  static const String procede = 'PROCEED';
   static const String uSure = 'Are your sure?';
   static const String no = 'NO';
   static const String yes = 'YES';

@@ -34,12 +34,14 @@ class _LoginPageState extends State<LoginPage>
   void dispose() {
     _passwordController.dispose();
     _emailController.dispose();
+    _repeatPasswordController.dispose();
     super.dispose();
   }
 
   bool get isEmailNotEmpty => _emailController.text.isNotEmpty;
   bool get isPasswordConfirmed =>
-      _passwordController == _repeatPasswordController;
+      _passwordController.text == _repeatPasswordController.text;
+
   bool get isRegisterView => _authMode == AuthMode.signUp;
   bool get isLoginView => _authMode == AuthMode.signIn;
 
@@ -85,7 +87,9 @@ class _LoginPageState extends State<LoginPage>
         debugPrint('Sign-In Successful');
       } catch (e) {
         debugPrint('Sign-In Failed: $e');
-        rethrow;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Sign-In Failed: ${e.toString()}")),
+        );
       }
     }
 
@@ -106,12 +110,12 @@ class _LoginPageState extends State<LoginPage>
     }
 
 // Inside onPressed function
-    void onPressed() {
+    void onPressed() async {
       debugPrint('Auth Button Pressed: ${isLoginView ? 'SignIn' : 'SignUp'}');
       if (isLoginView) {
-        signUserIn();
+        await signUserIn(); // ✅ FIXED
       } else if (isRegisterView) {
-        signUserUp();
+        await signUserUp(); // ✅ FIXED
       }
     }
 
@@ -130,10 +134,10 @@ class _LoginPageState extends State<LoginPage>
                 Padding(
                   padding: const EdgeInsets.only(bottom: PaddingManager.p8),
                   child: SizedBox(
-                    width: SizeManager.s250.w,
+                     width: SizeManager.s350.w,
                     height: SizeManager.s250.h,
                     child: Image.asset(
-                      ImageManager.logo,
+                      ImageManager.logo1,
                     ),
                   ),
                 ),
@@ -205,11 +209,11 @@ class _LoginPageState extends State<LoginPage>
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 18.0),
+                  padding: EdgeInsets.only(top: 18.h), // ✅ ScreenUtil applied
                   child: GoogleSignInButtonWidget(onTap: _signInWithGoogle),
                 ),
               ],
-            ).animate().fadeIn(duration: 500.ms),
+            )
           ),
         ),
       ),

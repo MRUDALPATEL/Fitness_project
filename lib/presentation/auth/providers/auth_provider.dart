@@ -240,6 +240,7 @@ class AuthProvider with ChangeNotifier {
   }) async {
     showDialog(
       context: context,
+      barrierDismissible: false, // Prevent closing by tapping outside
       builder: (_) => Center(
         child: Padding(
           padding: const EdgeInsets.all(50),
@@ -249,105 +250,135 @@ class AuthProvider with ChangeNotifier {
     );
 
     try {
+      // Create user
       UserCredential credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      // Send email verification
+      await credential.user!.sendEmailVerification();
+
+      // Close the loading dialog
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(credential.user!.uid)
-          .set({});
 
-      Navigator.pushReplacementNamed(context, '/addData');
+      // Show a message to inform the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                "New User Register.")),
+      );
 
-      notifyListeners();
-    } on FirebaseAuthException catch (_) {
+      bool isVerified = false;
+      while (!isVerified) {
+        await Future.delayed(
+            Duration(seconds: 3)); // Wait 3 seconds before checking again
+        await credential.user!.reload(); // Reload user info
+        isVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+
+        if (isVerified) {
+          // Once verified, store user data in Firestore
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(credential.user!.uid)
+              .set({});
+
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacementNamed(context, '/addData');
+          return;
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      // Close the dialog if an error occurs
       Future.delayed(const Duration(seconds: 2)).then((value) {
         Navigator.pop(context);
-        notifyListeners();
       });
+
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? "Registration failed")),
+      );
     }
   }
 
   Future<void> addUserData({
-  required String email,
-  required String name,
-  required String surname,
-  required int age,
-  required double height,
-  required double weight,
-  required String gender,
-  required String activity,
-  required double bmr,
-  required String goal,
-  required double bmi,
-  required String category, // New dropdown value
-  required BuildContext context,
-}) async {
-  try {
-    // Get the currently signed-in user
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      throw Exception("No user is currently signed in.");
+    required String email,
+    required String name,
+    required String surname,
+    required int age,
+    required double height,
+    required double weight,
+    required String gender,
+    required String activity,
+    required double bmr,
+    required String goal,
+    required double bmi,
+    required String category, // New dropdown value
+    required BuildContext context,
+  }) async {
+    try {
+      // Get the currently signed-in user
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw Exception("No user is currently signed in.");
+      }
+
+      final docRef =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+      // Common data to store in Firestore
+      final userData = {
+        'email': email,
+        'first name': name,
+        'surname': surname,
+        'age': age,
+        'height': height,
+        'weight': weight,
+        'gender': gender,
+        'activity': activity,
+        'bmr': bmr,
+        'goal': goal,
+        'bmi': bmi,
+        'category': category, // Added new dropdown value
+        // Measurements (can be customized or expanded later)
+        'chest': 0.0,
+        'shoulders': 0.0,
+        'biceps': 0.0,
+        'foreArm': 0.0,
+        'waist': 0.0,
+        'hips': 0.0,
+        'thigh': 0.0,
+        'calf': 0.0,
+      };
+
+      // Check if the document exists
+      final docSnapshot = await docRef.get();
+
+      if (docSnapshot.exists) {
+        // Update existing document
+        await docRef.update(userData);
+      } else {
+        // Create a new document if it doesn't exist
+        await docRef.set(userData);
+      }
+
+      debugPrint("User data added/updated successfully.");
+    } on FirebaseException catch (e) {
+      debugPrint("FirebaseException in addUserData: ${e.message}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to save data: ${e.message}")),
+      );
+      rethrow;
+    } catch (e) {
+      debugPrint("Unexpected error in addUserData: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An unexpected error occurred.")),
+      );
+      rethrow;
     }
-
-    final docRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
-
-    // Common data to store in Firestore
-    final userData = {
-      'email': email,
-      'first name': name,
-      'surname': surname,
-      'age': age,
-      'height': height,
-      'weight': weight,
-      'gender': gender,
-      'activity': activity,
-      'bmr': bmr,
-      'goal': goal,
-      'bmi': bmi,
-      'category': category, // Added new dropdown value
-      // Measurements (can be customized or expanded later)
-      'chest': 0.0,
-      'shoulders': 0.0,
-      'biceps': 0.0,
-      'foreArm': 0.0,
-      'waist': 0.0,
-      'hips': 0.0,
-      'thigh': 0.0,
-      'calf': 0.0,
-    };
-
-    // Check if the document exists
-    final docSnapshot = await docRef.get();
-
-    if (docSnapshot.exists) {
-      // Update existing document
-      await docRef.update(userData);
-    } else {
-      // Create a new document if it doesn't exist
-      await docRef.set(userData);
-    }
-
-    debugPrint("User data added/updated successfully.");
-  } on FirebaseException catch (e) {
-    debugPrint("FirebaseException in addUserData: ${e.message}");
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Failed to save data: ${e.message}")),
-    );
-    rethrow;
-  } catch (e) {
-    debugPrint("Unexpected error in addUserData: $e");
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("An unexpected error occurred.")),
-    );
-    rethrow;
   }
-}
-
 
   Future<void> signInWithGoogle(BuildContext context) async {
     try {

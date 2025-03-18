@@ -30,7 +30,7 @@ class ConsumptionPageAppBarWidget extends StatelessWidget {
             height: SizeManager.s40.h,
             width: SizeManager.s40.w,
             decoration: BoxDecoration(
-              color: ColorManager.grey3,
+              color: ColorManager.darkGrey,
               borderRadius: BorderRadius.circular(
                 RadiusManager.r40.r,
               ),
@@ -38,7 +38,7 @@ class ConsumptionPageAppBarWidget extends StatelessWidget {
             child: IconButton(
               splashColor: ColorManager.grey3,
               onPressed: () =>
-                  Navigator.of(context).pushNamed(Routes.newMealRoute),
+                  Navigator.of(context).pushNamed(Routes.newMealRouteTest),
               icon: const Icon(
                 Icons.add,
                 size: SizeManager.s26,

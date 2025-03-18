@@ -68,7 +68,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
           height: 80.h,
           color: ColorManager.white,
           animSpeedFactor: 2,
-          backgroundColor: ColorManager.black,
+          backgroundColor: ColorManager.darkGrey,
           onRefresh: _handleRefresh,
           child: Container(
             color: ColorManager.darkGrey,

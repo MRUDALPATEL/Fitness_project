@@ -130,7 +130,7 @@ class MealWidget extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${amount.round()} G',
+                        '${amount.round()} ',
                         style: StyleManager.mealWidgetDataTextStyle,
                       ),
                     ],
