@@ -63,6 +63,8 @@ class _SetGoalPageState extends State<SetGoalPage> {
         backgroundColor: ColorManager.darkGrey,
         elevation: SizeManager.s0,
         title: Text(StringsManager.setGoal, style: StyleManager.abTitleTextStyle),
+        iconTheme:
+            const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
         child: Padding(
@@ -89,17 +91,24 @@ class _SetGoalPageState extends State<SetGoalPage> {
                     borderSide: BorderSide(color: ColorManager.white),
                   ),
                 ),
+                style: TextStyle(color: ColorManager.white), 
               ),
               TextField(
                 controller: _goalValueController,
                 decoration: const InputDecoration(
                   labelText: StringsManager.goalValue,
                   labelStyle: TextStyle(color: ColorManager.white),
+                  
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: ColorManager.white),
                   ),
                 ),
                 keyboardType: TextInputType.number,
+                
+  style: TextStyle(color: ColorManager.white), // Use style here
+  
+
+
               ),
               DropdownButtonFormField<String>(
                 value: _duration,
@@ -120,6 +129,7 @@ class _SetGoalPageState extends State<SetGoalPage> {
                     borderSide: BorderSide(color: ColorManager.white),
                   ),
                 ),
+                style: TextStyle(color: ColorManager.white), 
               ),
               const SizedBox(height: 20),
               LimeGreenRoundedButtonWidget(

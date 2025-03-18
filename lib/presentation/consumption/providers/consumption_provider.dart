@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fitnessapp/model/meal_model.dart';
 import 'package:fitnessapp/model/water_model.dart';
 import 'package:fitnessapp/utils/notifications/notification_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class ConsumptionProvider with ChangeNotifier {
@@ -350,23 +351,28 @@ class ConsumptionProvider with ChangeNotifier {
     }
   }
 
-  Future<void> clearMealsIfDayChanges(DateTime lastMealDateTime) async {
-    final now = DateTime.now();
-    if (now.year > lastMealDateTime.year ||
-        now.month > lastMealDateTime.month ||
-        now.day > lastMealDateTime.day) {
-      meals.clear();
-      notifyListeners();
-    }
-  }
+ 
+Future<void> clearDataIfDayChanges() async {
+  final prefs = await SharedPreferences.getInstance();
+  final lastUpdateTimestamp = prefs.getInt('last_update') ?? 0;
+  final lastUpdate = DateTime.fromMillisecondsSinceEpoch(lastUpdateTimestamp);
 
-  Future<void> clearWaterIfDayChanges(DateTime lastWaterDateTime) async {
-    final now = DateTime.now();
-    if (now.year > lastWaterDateTime.year ||
-        now.month > lastWaterDateTime.month ||
-        now.day > lastWaterDateTime.day) {
-      water.clear();
-      notifyListeners();
-    }
+  final now = DateTime.now();
+  
+  if (now.year > lastUpdate.year ||
+      now.month > lastUpdate.month ||
+      now.day > lastUpdate.day) {
+    meals.clear();
+    water.clear();
+    notifyListeners();
+
+    // Update last update time
+    await prefs.setInt('last_update', now.millisecondsSinceEpoch);
   }
+}
+
+
+
+
+
 }

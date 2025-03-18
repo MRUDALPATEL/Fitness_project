@@ -87,7 +87,7 @@ class _MainPageState extends State<MainPage> {
         if (now.year > lastMealDateTime.year ||
             now.month > lastMealDateTime.month ||
             now.day > lastMealDateTime.day) {
-          await consumptionProvider.clearMealsIfDayChanges(lastMealDateTime);
+          await consumptionProvider.clearDataIfDayChanges();
           await consumptionProvider.fetchAndSetMeals();
         }
       }
@@ -97,7 +97,7 @@ class _MainPageState extends State<MainPage> {
         if (now.year > lastWaterDateTime.year ||
             now.month > lastWaterDateTime.month ||
             now.day > lastWaterDateTime.day) {
-          await consumptionProvider.clearWaterIfDayChanges(lastWaterDateTime);
+          await consumptionProvider.clearDataIfDayChanges();
           await consumptionProvider.fetchAndSetWater();
         }
       }

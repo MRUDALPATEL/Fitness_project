@@ -1,3 +1,4 @@
+import 'package:fitnessapp/presentation/auth/widgets/google_signin_button-widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -204,11 +205,8 @@ class _LoginPageState extends State<LoginPage>
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: PaddingManager.p18),
-                  child: LimeGreenRoundedButtonWidget(
-                    onTap: _signInWithGoogle,
-                    title: StringsManager.signInWithGoogle,
-                  ),
+                  padding: const EdgeInsets.only(top: 18.0),
+                  child: GoogleSignInButtonWidget(onTap: _signInWithGoogle),
                 ),
               ],
             ).animate().fadeIn(duration: 500.ms),
