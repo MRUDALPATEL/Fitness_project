@@ -18,7 +18,7 @@
 //   bool _loading = false;
 
 //   // REPLACE WITH YOUR GOOGLE CLOUD VISION API KEY
-//   final String apiKey = "AIzaSyBQOvp8jtA1PdaUwklJFbs61SMlusqnxYs";
+//   final String apiKey = "";
 
 //   Future<void> _pickImage(ImageSource source) async {
 //     final pickedFile = await ImagePicker().pickImage(source: source);
