@@ -1,44 +1,77 @@
-# Miscellaneous
-*.class
+# ========================================
+# Flutter / Dart Project .gitignore
+# Updated for Android, iOS, Gradle, Firebase, VS Code, IntelliJ
+# ========================================
+
+# ----------------------------------------
+# System-specific files
+# ----------------------------------------
+.DS_Store
 *.log
 *.pyc
 *.swp
-.DS_Store
+*.class
+
+# ----------------------------------------
+# Version control leftovers
+# ----------------------------------------
 .atom/
 .buildlog/
 .history
 .svn/
 migrate_working_dir/
 
-# IntelliJ related
+# ----------------------------------------
+# IDEs
+# ----------------------------------------
+
+# IntelliJ / Android Studio
+.idea/
 *.iml
 *.ipr
 *.iws
-.idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-firebase_options.dart
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+# VS Code
+.vscode/
+
+# ----------------------------------------
+# Flutter/Dart
+# ----------------------------------------
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages
-.pub-cache/
 .pub/
+.pub-cache/
+
+# Documentation
+**/doc/api/
+
+# ----------------------------------------
+# Android specific
+# ----------------------------------------
+**/android/.gradle/
+**/android/.idea/
+**/android/local.properties
+**/android/app/*.keystore
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
+**/android/build/
+**/android/captures/
+**/android/gradle/
+
+# ----------------------------------------
+# Build output
+# ----------------------------------------
 /build/
+**/build/
 
-# Symbolication related
+# ----------------------------------------
+# Firebase & Obfuscation
+# ----------------------------------------
+firebase_options.dart
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# ========================================
